@@ -28,6 +28,7 @@ class Toolbox:
         self.plant = self.customer.branch_plant
         self.files_dir = files_dir
         self.search = CatalogSearch(ds.products())
+        self.attachments: dict[str, bytes] = {}  # spreadsheets the user attached in this session
 
     # --- helpers ---
 
@@ -122,8 +123,12 @@ class Toolbox:
             batches = self._batches_in_stock(p.material_id)
             return batches[-1].expiry_date if batches else ""
 
-        # Within a tier: longest shelf life first.
-        tiers.sort(key=lambda t: (t[0], _neg_date(best_expiry(t[2])), t[2].name_short))
+        def short_only(p: Product) -> bool:
+            batches = self._batches_in_stock(p.material_id)
+            return all(self._days_left(b) <= SHORT_EXPIRY_DAYS for b in batches)
+
+        # Within a tier: analogs with only short-expiry stock go last, then longest shelf life first.
+        tiers.sort(key=lambda t: (t[0], short_only(t[2]), _neg_date(best_expiry(t[2])), t[2].name_short))
         analogs = []
         for tier, kind, p in tiers[:limit]:
             batches = self._batches_in_stock(p.material_id)

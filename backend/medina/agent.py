@@ -25,6 +25,7 @@ class Agent:
         self.trace: list[dict] = []  # tool calls of the last turn, for debugging and evals
 
     def ask(self, user_content: str | list) -> str:
+        self._drop_old_images()
         self.messages.append({"role": "user", "content": user_content})
         self.trace = []
         for _ in range(MAX_STEPS):
@@ -40,6 +41,13 @@ class Agent:
                 self.messages.append({"role": "tool", "tool_call_id": call["id"],
                                       "content": json.dumps(result, ensure_ascii=False)})
         return "Не удалось завершить обработку запроса. Попробуйте сформулировать короче."
+
+    def _drop_old_images(self) -> None:
+        """Images were already read in their turn; resending them every turn would multiply the cost."""
+        for m in self.messages:
+            if m["role"] == "user" and isinstance(m["content"], list):
+                text = " ".join(p.get("text", "") for p in m["content"] if p.get("type") == "text")
+                m["content"] = text + "\n[The photo was processed in the reply that follows.]"
 
     def _run_tool(self, name: str, raw_args: str) -> dict:
         method = TOOL_METHODS.get(name)
