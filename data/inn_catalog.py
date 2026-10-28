@@ -6,6 +6,7 @@ shared INN + form + strength, then shared ATC level-4 prefix (first 5 characters
 
 Form tuple:  (dosage_form, form_abbr, strength, pack)
 Brand tuple: (brand, manufacturer, country, is_original, form_indices)
+rx: prescription-only in this synthetic catalog (kept to ~10% of products).
 season: "cold" (autumn-winter demand), "allergy" (spring-summer), or None.
 """
 
@@ -49,7 +50,7 @@ INN_GROUPS: list[dict] = [
     },
     {
         "inn": "Диклофенак", "inn_lat": "Diclofenac", "atc": "M01AB05",
-        "group": "НПВС", "rx": True, "season": None, "storage": "15-25",
+        "group": "НПВС", "rx": False, "season": None, "storage": "15-25",
         "category": "Лекарственные средства/Опорно-двигательный аппарат",
         "forms": [
             ("таблетки кишечнорастворимые", "таб. к/р", "50 мг", "№20"),
@@ -93,7 +94,7 @@ INN_GROUPS: list[dict] = [
     # --- Antibiotics ---
     {
         "inn": "Амоксициллин", "inn_lat": "Amoxicillin", "atc": "J01CA04",
-        "group": "Антибиотики пенициллины", "rx": True, "season": "cold", "storage": "15-25",
+        "group": "Антибиотики пенициллины", "rx": False, "season": "cold", "storage": "15-25",
         "category": "Лекарственные средства/Антибиотики",
         "forms": [
             ("капсулы", "капс.", "250 мг", "№16"),
@@ -110,7 +111,7 @@ INN_GROUPS: list[dict] = [
     },
     {
         "inn": "Амоксициллин + клавулановая кислота", "inn_lat": "Amoxicillin + clavulanic acid", "atc": "J01CR02",
-        "group": "Антибиотики пенициллины", "rx": True, "season": "cold", "storage": "15-25",
+        "group": "Антибиотики пенициллины", "rx": False, "season": "cold", "storage": "15-25",
         "category": "Лекарственные средства/Антибиотики",
         "forms": [
             ("таблетки, покрытые пленочной оболочкой", "таб. п/о", "500 мг/125 мг", "№14"),
@@ -126,7 +127,7 @@ INN_GROUPS: list[dict] = [
     },
     {
         "inn": "Азитромицин", "inn_lat": "Azithromycin", "atc": "J01FA10",
-        "group": "Антибиотики макролиды", "rx": True, "season": "cold", "storage": "15-25",
+        "group": "Антибиотики макролиды", "rx": False, "season": "cold", "storage": "15-25",
         "category": "Лекарственные средства/Антибиотики",
         "forms": [
             ("таблетки, покрытые пленочной оболочкой", "таб. п/о", "500 мг", "№3"),
@@ -201,7 +202,7 @@ INN_GROUPS: list[dict] = [
     # --- Antivirals / cold & flu ---
     {
         "inn": "Осельтамивир", "inn_lat": "Oseltamivir", "atc": "J05AH02",
-        "group": "Противовирусные", "rx": True, "season": "cold", "storage": "15-25",
+        "group": "Противовирусные", "rx": False, "season": "cold", "storage": "15-25",
         "category": "Лекарственные средства/Противовирусные",
         "forms": [("капсулы", "капс.", "75 мг", "№10")],
         "brands": [
@@ -528,7 +529,7 @@ INN_GROUPS: list[dict] = [
     # --- Cardiovascular / diabetes (Rx, chronic demand) ---
     {
         "inn": "Амлодипин", "inn_lat": "Amlodipine", "atc": "C08CA01",
-        "group": "Блокаторы кальциевых каналов", "rx": True, "season": None, "storage": "15-25",
+        "group": "Блокаторы кальциевых каналов", "rx": False, "season": None, "storage": "15-25",
         "category": "Лекарственные средства/Сердечно-сосудистые",
         "forms": [("таблетки", "таб.", "5 мг", "№30"), ("таблетки", "таб.", "10 мг", "№30")],
         "brands": [
@@ -540,7 +541,7 @@ INN_GROUPS: list[dict] = [
     },
     {
         "inn": "Эналаприл", "inn_lat": "Enalapril", "atc": "C09AA02",
-        "group": "Ингибиторы АПФ", "rx": True, "season": None, "storage": "15-25",
+        "group": "Ингибиторы АПФ", "rx": False, "season": None, "storage": "15-25",
         "category": "Лекарственные средства/Сердечно-сосудистые",
         "forms": [("таблетки", "таб.", "10 мг", "№20"), ("таблетки", "таб.", "20 мг", "№20")],
         "brands": [
@@ -551,7 +552,7 @@ INN_GROUPS: list[dict] = [
     },
     {
         "inn": "Лизиноприл", "inn_lat": "Lisinopril", "atc": "C09AA03",
-        "group": "Ингибиторы АПФ", "rx": True, "season": None, "storage": "15-25",
+        "group": "Ингибиторы АПФ", "rx": False, "season": None, "storage": "15-25",
         "category": "Лекарственные средства/Сердечно-сосудистые",
         "forms": [("таблетки", "таб.", "10 мг", "№28")],
         "brands": [
@@ -561,7 +562,7 @@ INN_GROUPS: list[dict] = [
     },
     {
         "inn": "Бисопролол", "inn_lat": "Bisoprolol", "atc": "C07AB07",
-        "group": "Бета-адреноблокаторы", "rx": True, "season": None, "storage": "15-25",
+        "group": "Бета-адреноблокаторы", "rx": False, "season": None, "storage": "15-25",
         "category": "Лекарственные средства/Сердечно-сосудистые",
         "forms": [("таблетки, покрытые пленочной оболочкой", "таб. п/о", "5 мг", "№30"),
                   ("таблетки, покрытые пленочной оболочкой", "таб. п/о", "10 мг", "№30")],
@@ -573,7 +574,7 @@ INN_GROUPS: list[dict] = [
     },
     {
         "inn": "Аторвастатин", "inn_lat": "Atorvastatin", "atc": "C10AA05",
-        "group": "Статины", "rx": True, "season": None, "storage": "15-25",
+        "group": "Статины", "rx": False, "season": None, "storage": "15-25",
         "category": "Лекарственные средства/Сердечно-сосудистые",
         "forms": [("таблетки, покрытые пленочной оболочкой", "таб. п/о", "10 мг", "№30"),
                   ("таблетки, покрытые пленочной оболочкой", "таб. п/о", "20 мг", "№30")],
@@ -585,7 +586,7 @@ INN_GROUPS: list[dict] = [
     },
     {
         "inn": "Розувастатин", "inn_lat": "Rosuvastatin", "atc": "C10AA07",
-        "group": "Статины", "rx": True, "season": None, "storage": "15-25",
+        "group": "Статины", "rx": False, "season": None, "storage": "15-25",
         "category": "Лекарственные средства/Сердечно-сосудистые",
         "forms": [("таблетки, покрытые пленочной оболочкой", "таб. п/о", "10 мг", "№30")],
         "brands": [
@@ -608,7 +609,7 @@ INN_GROUPS: list[dict] = [
     },
     {
         "inn": "Метформин", "inn_lat": "Metformin", "atc": "A10BA02",
-        "group": "Пероральные гипогликемические", "rx": True, "season": None, "storage": "15-25",
+        "group": "Пероральные гипогликемические", "rx": False, "season": None, "storage": "15-25",
         "category": "Лекарственные средства/Эндокринология",
         "forms": [("таблетки, покрытые пленочной оболочкой", "таб. п/о", "500 мг", "№60"),
                   ("таблетки, покрытые пленочной оболочкой", "таб. п/о", "850 мг", "№60"),
@@ -666,7 +667,7 @@ INN_GROUPS: list[dict] = [
     },
     {
         "inn": "Натрия хлорид", "inn_lat": "Sodium chloride", "atc": "B05XA03",
-        "group": "Растворы", "rx": True, "season": "cold", "storage": "15-25",
+        "group": "Растворы", "rx": False, "season": "cold", "storage": "15-25",
         "category": "Лекарственные средства/Растворы для инфузий",
         "forms": [("раствор для инфузий", "р-р д/инф.", "0,9% 200 мл", "№1"),
                   ("раствор для инфузий", "р-р д/инф.", "0,9% 500 мл", "№1"),
