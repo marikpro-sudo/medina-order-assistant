@@ -1,0 +1,927 @@
+[
+ {
+  "customer_id": "C100001",
+  "name": "Аптека «Шипа»",
+  "delivery_points": [
+   {
+    "point_id": "C100001-01",
+    "name": "Точка 1",
+    "address": "г. Караганда, ул. Цветочная, д. 53"
+   },
+   {
+    "point_id": "C100001-02",
+    "name": "Точка 2",
+    "address": "г. Караганда, ул. Степная, д. 134"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 3900000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100002",
+  "name": "Аптека «Саулық Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100002-01",
+    "name": "Точка 1",
+    "address": "г. Шымкент, ул. Абрикосовая, д. 54"
+   },
+   {
+    "point_id": "C100002-02",
+    "name": "Точка 2",
+    "address": "г. Шымкент, ул. Яблоневая, д. 96"
+   },
+   {
+    "point_id": "C100002-03",
+    "name": "Точка 3",
+    "address": "г. Шымкент, ул. Степная, д. 10"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 4000000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100003",
+  "name": "Аптека «Дәрігер Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100003-01",
+    "name": "Точка 1",
+    "address": "г. Павлодар, ул. Здоровья, д. 30"
+   },
+   {
+    "point_id": "C100003-02",
+    "name": "Точка 2",
+    "address": "г. Павлодар, ул. Ромашковая, д. 128"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 1400000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100004",
+  "name": "Аптека «Салауат Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100004-01",
+    "name": "Точка 1",
+    "address": "г. Шымкент, ул. Тюльпановая, д. 99"
+   },
+   {
+    "point_id": "C100004-02",
+    "name": "Точка 2",
+    "address": "г. Шымкент, ул. Полевая, д. 22"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 1700000.0,
+  "overdue_debt": 594230.34
+ },
+ {
+  "customer_id": "C100005",
+  "name": "Аптека «Шипагер»",
+  "delivery_points": [
+   {
+    "point_id": "C100005-01",
+    "name": "Точка 1",
+    "address": "г. Актобе, ул. Школьная, д. 5"
+   },
+   {
+    "point_id": "C100005-02",
+    "name": "Точка 2",
+    "address": "г. Актобе, ул. Горная, д. 99"
+   }
+  ],
+  "branch_plant": "P02",
+  "credit_limit": 6600000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100006",
+  "name": "Аптека «Василёк»",
+  "delivery_points": [
+   {
+    "point_id": "C100006-01",
+    "name": "Точка 1",
+    "address": "г. Алматы, ул. Зелёная, д. 98"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 3300000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100007",
+  "name": "Аптека «Ромашка»",
+  "delivery_points": [
+   {
+    "point_id": "C100007-01",
+    "name": "Точка 1",
+    "address": "г. Павлодар, ул. Абрикосовая, д. 14"
+   },
+   {
+    "point_id": "C100007-02",
+    "name": "Точка 2",
+    "address": "г. Павлодар, ул. Полевая, д. 9"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 7900000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100008",
+  "name": "Аптека «Солодка»",
+  "delivery_points": [
+   {
+    "point_id": "C100008-01",
+    "name": "Точка 1",
+    "address": "г. Тараз, ул. Ромашковая, д. 87"
+   },
+   {
+    "point_id": "C100008-02",
+    "name": "Точка 2",
+    "address": "г. Тараз, ул. Садовая, д. 56"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 1300000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100009",
+  "name": "Аптека «Зверобой Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100009-01",
+    "name": "Точка 1",
+    "address": "г. Шымкент, ул. Жасминовая, д. 112"
+   },
+   {
+    "point_id": "C100009-02",
+    "name": "Точка 2",
+    "address": "г. Шымкент, ул. Дружбы, д. 15"
+   },
+   {
+    "point_id": "C100009-03",
+    "name": "Точка 3",
+    "address": "г. Шымкент, ул. Яблоневая, д. 142"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 5900000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100010",
+  "name": "Аптека «Алтей»",
+  "delivery_points": [
+   {
+    "point_id": "C100010-01",
+    "name": "Точка 1",
+    "address": "г. Павлодар, ул. Полевая, д. 137"
+   },
+   {
+    "point_id": "C100010-02",
+    "name": "Точка 2",
+    "address": "г. Павлодар, ул. Здоровья, д. 109"
+   },
+   {
+    "point_id": "C100010-03",
+    "name": "Точка 3",
+    "address": "г. Павлодар, ул. Тюльпановая, д. 146"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 7600000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100011",
+  "name": "Аптека «Ромашка Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100011-01",
+    "name": "Точка 1",
+    "address": "г. Шымкент, ул. Горная, д. 120"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 4000000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100012",
+  "name": "Аптека «Алтей Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100012-01",
+    "name": "Точка 1",
+    "address": "г. Астана, ул. Садовая, д. 71"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 2000000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100013",
+  "name": "Аптека «Эвкалипт Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100013-01",
+    "name": "Точка 1",
+    "address": "г. Астана, ул. Полевая, д. 87"
+   },
+   {
+    "point_id": "C100013-02",
+    "name": "Точка 2",
+    "address": "г. Астана, ул. Тюльпановая, д. 102"
+   },
+   {
+    "point_id": "C100013-03",
+    "name": "Точка 3",
+    "address": "г. Астана, ул. Сиреневая, д. 71"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 5600000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100014",
+  "name": "Аптека «Василёк Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100014-01",
+    "name": "Точка 1",
+    "address": "г. Шымкент, ул. Садовая, д. 4"
+   },
+   {
+    "point_id": "C100014-02",
+    "name": "Точка 2",
+    "address": "г. Шымкент, ул. Яблоневая, д. 79"
+   },
+   {
+    "point_id": "C100014-03",
+    "name": "Точка 3",
+    "address": "г. Шымкент, ул. Тюльпановая, д. 83"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 4300000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100015",
+  "name": "Аптека «Шипагер Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100015-01",
+    "name": "Точка 1",
+    "address": "г. Тараз, ул. Здоровья, д. 119"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 1200000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100016",
+  "name": "Аптека «Солодка Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100016-01",
+    "name": "Точка 1",
+    "address": "г. Караганда, ул. Здоровья, д. 10"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 5500000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100017",
+  "name": "Аптека «Нұр»",
+  "delivery_points": [
+   {
+    "point_id": "C100017-01",
+    "name": "Точка 1",
+    "address": "г. Караганда, ул. Абрикосовая, д. 56"
+   },
+   {
+    "point_id": "C100017-02",
+    "name": "Точка 2",
+    "address": "г. Караганда, ул. Дружбы, д. 15"
+   },
+   {
+    "point_id": "C100017-03",
+    "name": "Точка 3",
+    "address": "г. Караганда, ул. Тюльпановая, д. 21"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 4500000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100018",
+  "name": "Аптека «Дәру Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100018-01",
+    "name": "Точка 1",
+    "address": "г. Актобе, ул. Луговая, д. 17"
+   },
+   {
+    "point_id": "C100018-02",
+    "name": "Точка 2",
+    "address": "г. Актобе, ул. Здоровья, д. 47"
+   },
+   {
+    "point_id": "C100018-03",
+    "name": "Точка 3",
+    "address": "г. Актобе, ул. Садовая, д. 71"
+   }
+  ],
+  "branch_plant": "P02",
+  "credit_limit": 4300000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100019",
+  "name": "Аптека «Душица»",
+  "delivery_points": [
+   {
+    "point_id": "C100019-01",
+    "name": "Точка 1",
+    "address": "г. Тараз, ул. Степная, д. 59"
+   },
+   {
+    "point_id": "C100019-02",
+    "name": "Точка 2",
+    "address": "г. Тараз, ул. Солнечная, д. 38"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 8900000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100020",
+  "name": "Аптека «Жанұя Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100020-01",
+    "name": "Точка 1",
+    "address": "г. Павлодар, ул. Новая, д. 30"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 9300000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100021",
+  "name": "Аптека «Өмір Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100021-01",
+    "name": "Точка 1",
+    "address": "г. Алматы, ул. Вишнёвая, д. 113"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 8400000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100022",
+  "name": "Аптека «Қамқор Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100022-01",
+    "name": "Точка 1",
+    "address": "г. Шымкент, ул. Абрикосовая, д. 59"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 1700000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100023",
+  "name": "Аптека «Подорожник Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100023-01",
+    "name": "Точка 1",
+    "address": "г. Павлодар, ул. Садовая, д. 5"
+   },
+   {
+    "point_id": "C100023-02",
+    "name": "Точка 2",
+    "address": "г. Павлодар, ул. Весенняя, д. 139"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 1500000.0,
+  "overdue_debt": 1221128.74
+ },
+ {
+  "customer_id": "C100024",
+  "name": "Аптека «Денсаулық Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100024-01",
+    "name": "Точка 1",
+    "address": "г. Шымкент, ул. Цветочная, д. 130"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 6600000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100025",
+  "name": "Аптека «Календула Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100025-01",
+    "name": "Точка 1",
+    "address": "г. Алматы, ул. Цветочная, д. 61"
+   },
+   {
+    "point_id": "C100025-02",
+    "name": "Точка 2",
+    "address": "г. Алматы, ул. Зелёная, д. 84"
+   },
+   {
+    "point_id": "C100025-03",
+    "name": "Точка 3",
+    "address": "г. Алматы, ул. Тюльпановая, д. 96"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 9700000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100026",
+  "name": "Аптека «Сенім»",
+  "delivery_points": [
+   {
+    "point_id": "C100026-01",
+    "name": "Точка 1",
+    "address": "г. Караганда, ул. Дружбы, д. 73"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 2800000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100027",
+  "name": "Аптека «Дәру»",
+  "delivery_points": [
+   {
+    "point_id": "C100027-01",
+    "name": "Точка 1",
+    "address": "г. Алматы, ул. Жасминовая, д. 93"
+   },
+   {
+    "point_id": "C100027-02",
+    "name": "Точка 2",
+    "address": "г. Алматы, ул. Луговая, д. 105"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 9300000.0,
+  "overdue_debt": 780695.43
+ },
+ {
+  "customer_id": "C100028",
+  "name": "Аптека «Эвкалипт»",
+  "delivery_points": [
+   {
+    "point_id": "C100028-01",
+    "name": "Точка 1",
+    "address": "г. Шымкент, ул. Ромашковая, д. 42"
+   },
+   {
+    "point_id": "C100028-02",
+    "name": "Точка 2",
+    "address": "г. Шымкент, ул. Весенняя, д. 12"
+   },
+   {
+    "point_id": "C100028-03",
+    "name": "Точка 3",
+    "address": "г. Шымкент, ул. Полевая, д. 39"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 8500000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100029",
+  "name": "Аптека «Календула»",
+  "delivery_points": [
+   {
+    "point_id": "C100029-01",
+    "name": "Точка 1",
+    "address": "г. Алматы, ул. Жасминовая, д. 55"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 5000000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100030",
+  "name": "Аптека «Арай Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100030-01",
+    "name": "Точка 1",
+    "address": "г. Актобе, ул. Вишнёвая, д. 149"
+   },
+   {
+    "point_id": "C100030-02",
+    "name": "Точка 2",
+    "address": "г. Актобе, ул. Весенняя, д. 56"
+   },
+   {
+    "point_id": "C100030-03",
+    "name": "Точка 3",
+    "address": "г. Актобе, ул. Горная, д. 150"
+   }
+  ],
+  "branch_plant": "P02",
+  "credit_limit": 1400000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100031",
+  "name": "Аптека «Үміт»",
+  "delivery_points": [
+   {
+    "point_id": "C100031-01",
+    "name": "Точка 1",
+    "address": "г. Павлодар, ул. Степная, д. 98"
+   },
+   {
+    "point_id": "C100031-02",
+    "name": "Точка 2",
+    "address": "г. Павлодар, ул. Цветочная, д. 20"
+   },
+   {
+    "point_id": "C100031-03",
+    "name": "Точка 3",
+    "address": "г. Павлодар, ул. Новая, д. 145"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 7400000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100032",
+  "name": "Аптека «Шипа Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100032-01",
+    "name": "Точка 1",
+    "address": "г. Актобе, ул. Абрикосовая, д. 108"
+   },
+   {
+    "point_id": "C100032-02",
+    "name": "Точка 2",
+    "address": "г. Актобе, ул. Абрикосовая, д. 32"
+   },
+   {
+    "point_id": "C100032-03",
+    "name": "Точка 3",
+    "address": "г. Актобе, ул. Вишнёвая, д. 14"
+   }
+  ],
+  "branch_plant": "P02",
+  "credit_limit": 8700000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100033",
+  "name": "Аптека «Незабудка»",
+  "delivery_points": [
+   {
+    "point_id": "C100033-01",
+    "name": "Точка 1",
+    "address": "г. Караганда, ул. Вишнёвая, д. 134"
+   },
+   {
+    "point_id": "C100033-02",
+    "name": "Точка 2",
+    "address": "г. Караганда, ул. Здоровья, д. 82"
+   },
+   {
+    "point_id": "C100033-03",
+    "name": "Точка 3",
+    "address": "г. Караганда, ул. Садовая, д. 50"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 8300000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100034",
+  "name": "Аптека «Қамқор»",
+  "delivery_points": [
+   {
+    "point_id": "C100034-01",
+    "name": "Точка 1",
+    "address": "г. Шымкент, ул. Луговая, д. 63"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 5600000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100035",
+  "name": "Аптека «Береке Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100035-01",
+    "name": "Точка 1",
+    "address": "г. Астана, ул. Луговая, д. 30"
+   },
+   {
+    "point_id": "C100035-02",
+    "name": "Точка 2",
+    "address": "г. Астана, ул. Новая, д. 114"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 6200000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100036",
+  "name": "Аптека «Мейірім»",
+  "delivery_points": [
+   {
+    "point_id": "C100036-01",
+    "name": "Точка 1",
+    "address": "г. Шымкент, ул. Весенняя, д. 144"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 7400000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100037",
+  "name": "Аптека «Үміт Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100037-01",
+    "name": "Точка 1",
+    "address": "г. Алматы, ул. Школьная, д. 59"
+   },
+   {
+    "point_id": "C100037-02",
+    "name": "Точка 2",
+    "address": "г. Алматы, ул. Здоровья, д. 108"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 3900000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100038",
+  "name": "Аптека «Салауат»",
+  "delivery_points": [
+   {
+    "point_id": "C100038-01",
+    "name": "Точка 1",
+    "address": "г. Актобе, ул. Абрикосовая, д. 63"
+   }
+  ],
+  "branch_plant": "P02",
+  "credit_limit": 6200000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100039",
+  "name": "Аптека «Душица Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100039-01",
+    "name": "Точка 1",
+    "address": "г. Павлодар, ул. Степная, д. 67"
+   },
+   {
+    "point_id": "C100039-02",
+    "name": "Точка 2",
+    "address": "г. Павлодар, ул. Полевая, д. 88"
+   },
+   {
+    "point_id": "C100039-03",
+    "name": "Точка 3",
+    "address": "г. Павлодар, ул. Луговая, д. 31"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 2000000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100040",
+  "name": "Аптека «Мелисса Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100040-01",
+    "name": "Точка 1",
+    "address": "г. Караганда, ул. Вишнёвая, д. 38"
+   },
+   {
+    "point_id": "C100040-02",
+    "name": "Точка 2",
+    "address": "г. Караганда, ул. Тюльпановая, д. 127"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 9000000.0,
+  "overdue_debt": 1768810.42
+ },
+ {
+  "customer_id": "C100041",
+  "name": "Аптека «Незабудка Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100041-01",
+    "name": "Точка 1",
+    "address": "г. Астана, ул. Здоровья, д. 4"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 3100000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100042",
+  "name": "Аптека «Дәрігер»",
+  "delivery_points": [
+   {
+    "point_id": "C100042-01",
+    "name": "Точка 1",
+    "address": "г. Алматы, ул. Садовая, д. 142"
+   },
+   {
+    "point_id": "C100042-02",
+    "name": "Точка 2",
+    "address": "г. Алматы, ул. Школьная, д. 26"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 2600000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100043",
+  "name": "Аптека «Мейірім Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100043-01",
+    "name": "Точка 1",
+    "address": "г. Тараз, ул. Дружбы, д. 7"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 9800000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100044",
+  "name": "Аптека «Нұр Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100044-01",
+    "name": "Точка 1",
+    "address": "г. Астана, ул. Степная, д. 132"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 7700000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100045",
+  "name": "Аптека «Подорожник»",
+  "delivery_points": [
+   {
+    "point_id": "C100045-01",
+    "name": "Точка 1",
+    "address": "г. Караганда, ул. Весенняя, д. 33"
+   },
+   {
+    "point_id": "C100045-02",
+    "name": "Точка 2",
+    "address": "г. Караганда, ул. Горная, д. 143"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 4000000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100046",
+  "name": "ТОО «Медцентр Шалфей Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100046-01",
+    "name": "Точка 1",
+    "address": "г. Павлодар, ул. Яблоневая, д. 87"
+   },
+   {
+    "point_id": "C100046-02",
+    "name": "Точка 2",
+    "address": "г. Павлодар, ул. Луговая, д. 28"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 1500000.0,
+  "overdue_debt": 193817.46
+ },
+ {
+  "customer_id": "C100047",
+  "name": "ТОО «Медцентр Береке»",
+  "delivery_points": [
+   {
+    "point_id": "C100047-01",
+    "name": "Точка 1",
+    "address": "г. Шымкент, ул. Дружбы, д. 116"
+   },
+   {
+    "point_id": "C100047-02",
+    "name": "Точка 2",
+    "address": "г. Шымкент, ул. Дружбы, д. 75"
+   }
+  ],
+  "branch_plant": "P03",
+  "credit_limit": 7100000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100048",
+  "name": "ТОО «Медцентр Сенім Плюс»",
+  "delivery_points": [
+   {
+    "point_id": "C100048-01",
+    "name": "Точка 1",
+    "address": "г. Павлодар, ул. Солнечная, д. 131"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 2000000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100049",
+  "name": "ТОО «Медцентр Арай»",
+  "delivery_points": [
+   {
+    "point_id": "C100049-01",
+    "name": "Точка 1",
+    "address": "г. Астана, ул. Тюльпановая, д. 95"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 9600000.0,
+  "overdue_debt": 0.0
+ },
+ {
+  "customer_id": "C100050",
+  "name": "ТОО «Медцентр Өмір»",
+  "delivery_points": [
+   {
+    "point_id": "C100050-01",
+    "name": "Точка 1",
+    "address": "г. Павлодар, ул. Горная, д. 83"
+   },
+   {
+    "point_id": "C100050-02",
+    "name": "Точка 2",
+    "address": "г. Павлодар, ул. Здоровья, д. 46"
+   }
+  ],
+  "branch_plant": "P01",
+  "credit_limit": 7500000.0,
+  "overdue_debt": 0.0
+ }
+]
