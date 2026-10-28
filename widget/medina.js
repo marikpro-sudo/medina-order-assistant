@@ -785,6 +785,8 @@ function api() {
     open: openPanel,
     close: closePanel,
     send: (text) => doSend(text),
+    // Host page hands over a file, e.g. one its own upload just rejected.
+    sendFile: (file, text) => { openPanel(); doSend(text || '', file); },
     setLang: (l) => { if (l === 'ru' || l === 'kk') { lang = l; setTexts(); saveState(); } },
     reset: resetChat
   };

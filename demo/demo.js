@@ -116,7 +116,8 @@
     } else {
       out.innerHTML = `<div class="alert err">${esc(res.error)}
         <button id="ask-medina" type="button">Разобрать файл с Medina</button></div>`;
-      $("ask-medina").addEventListener("click", () => window.Medina && window.Medina.open());
+      $("ask-medina").addEventListener("click", () => window.Medina &&
+        window.Medina.sendFile(f, "Портал не принял этот файл: «Ошибка загрузки файла». Найди ошибки по строкам"));
     }
   });
 
