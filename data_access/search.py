@@ -52,6 +52,19 @@ _PRODUCT_FORM_RULES = [
 _STOP_WORDS = {"мг", "мл", "г", "ед", "ме", "шт", "уп", "упак", "штук", "дана", "пачка", "кор",
                "mg", "ml", "по", "и", "для", "детский", "детскии", "балалар", "форте"}
 
+# Common names pharmacies use instead of the INN (normalized INN -> aliases).
+_INN_ALIASES = {
+    "колекальциферол": ["витамин д", "витамин д3", "д3", "вит д"],
+    "аскорбиновая кислота": ["витамин с", "витамин ц", "аскорбинка", "вит с"],
+    "ацетилсалициловая кислота": ["аспирин", "кардиоаспирин"],
+    "метамизол натрия": ["анальгин"],
+    "магния лактат + пиридоксин": ["магний б6", "магне б6"],
+    "смектит диоктаэдрический": ["смекта"],
+    "натрия хлорид": ["физраствор", "физ раствор"],
+    "морская вода": ["аквамарис"],
+    "железа (iii) гидроксид полимальтозат": ["железо", "мальтофер"],
+}
+
 _NUM_RE = re.compile(r"\d+(?:[.,]\d+)?")
 _PACK_RE = re.compile(r"(?:№|\b(?:n|no|х|x))\s*(\d+)\b")
 
@@ -83,6 +96,7 @@ class _Indexed:
     brand: str
     inn: str
     inn_lat: str
+    aliases: list[str]
     numbers: set[str]
     form: str | None
     pack: str | None
@@ -119,7 +133,7 @@ def _parse_query(query: str) -> _ParsedQuery:
         elif _NUM_RE.fullmatch(tok) or tok in _STOP_WORDS or tok in {"№", "%"}:
             continue
         else:
-            name_tokens.append(tok)
+            name_tokens.append(tok.replace("-", " "))
     numbers = _numbers(_PACK_RE.sub(" ", query.lower()))
     return _ParsedQuery(" ".join(name_tokens), numbers, form, pack)
 
@@ -129,10 +143,12 @@ class CatalogSearch:
         self._items = [
             _Indexed(
                 product=p,
-                brand=normalize(p.brand),
+                brand=normalize(p.brand).replace("-", " "),
                 inn=normalize(p.inn),
                 inn_lat=normalize(p.inn_lat),
-                numbers=_numbers(p.strength),
+                aliases=[normalize(a) for a in _INN_ALIASES.get(p.inn.lower(), [])],
+                # strength plus volume/mass from the pack ("1 л", "100 мл"), not the "№N" count
+                numbers=_numbers(p.strength) | _numbers(re.sub(r"№\s*\d+", " ", p.name_short)),
                 form=product_form_family(p.dosage_form),
                 pack=(m.group(1) if (m := re.search(r"№\s*(\d+)", p.name_short)) else None),
             )
@@ -159,27 +175,42 @@ class CatalogSearch:
         hits = []
         for it in self._items:
             brand_s = _name_score(pq.name, it.brand)
-            inn_s = max(_name_score(pq.name, it.inn), _name_score(pq.name, it.inn_lat))
+            inn_s = max([_name_score(pq.name, it.inn), _name_score(pq.name, it.inn_lat)]
+                        + [_name_score(pq.name, a) for a in it.aliases])
             score, matched_on = (brand_s, "brand") if brand_s >= inn_s else (inn_s, "inn")
             if score < min_score - 15:
                 continue
             if pq.numbers:
-                score += 8 if pq.numbers & it.numbers else -6
+                matched = len(pq.numbers & it.numbers)
+                if matched == len(pq.numbers):
+                    score += 8
+                elif matched:
+                    score += 8 * matched / len(pq.numbers) - 3
+                else:
+                    score -= 6
             if pq.form and it.form:
                 score += 5 if pq.form == it.form else -8
             if pq.pack and it.pack:
                 score += 4 if pq.pack == it.pack else -2
             if score >= min_score:
-                hits.append(SearchHit(it.product, round(min(score, 100.0), 1), matched_on))
-        hits.sort(key=lambda h: (-h.score, h.product.name_short))
-        return hits[:limit]
+                hits.append((score, it.product.material_id, SearchHit(it.product, 0.0, matched_on)))
+        # Raw score first; ties go to catalog order (base packs before pack variants).
+        hits.sort(key=lambda h: (-h[0], h[1]))
+        out = []
+        for score, _, hit in hits[:limit]:
+            hit.score = round(min(score, 100.0), 1)
+            out.append(hit)
+        return out
 
 
 def _name_score(query_name: str, field: str) -> float:
     if not field:
         return 0.0
     full = fuzz.ratio(query_name, field)
-    # Query may hold extra words ("нурофен экспресс форте"); field may be multi-word ("но шпа").
-    partial = fuzz.token_set_ratio(query_name, field)
-    prefix = fuzz.partial_ratio(query_name, field) if len(query_name) >= 4 else 0
-    return max(full, partial * 0.95, prefix * 0.9)
+    # Query may hold extra words ("нурофен экспресс"); field words missing from the query cost a
+    # little, so "амоксициллин" prefers plain amoxicillin over amoxicillin + clavulanic acid.
+    q_tokens, f_tokens = set(query_name.split()), field.split()
+    extra = sum(1 for t in f_tokens if t not in q_tokens and len(t) > 2 and t != "+")
+    partial = fuzz.token_set_ratio(query_name, field) * 0.95 - 4 * extra
+    prefix = fuzz.partial_ratio(query_name, field) * 0.9 - 4 * extra if len(query_name) >= 4 else 0
+    return max(full, partial, prefix)
