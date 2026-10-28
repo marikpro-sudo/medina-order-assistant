@@ -141,7 +141,9 @@ def _score_order(case: dict, prediction) -> dict:
         status = pred.get("status") if isinstance(pred, dict) else None
         qty = _as_int(pred.get("qty")) if isinstance(pred, dict) else None
         gold_qty = line.get("gold_qty")
-        if expect == "unrecognized":
+        if pred is None:  # no structured output for this line: nothing to credit
+            line_ok = False
+        elif expect == "unrecognized":
             line_ok = status == "unrecognized" or not mid
         else:
             line_ok = bool(mid) and mid in acceptable
@@ -338,6 +340,10 @@ def run_case(case: dict, llm: LLM) -> dict:
                     "error": f"{type(exc).__name__}: {exc}"}
 
 
+AGENT_METRICS = ("line_accuracy", "status_accuracy", "analog_rate", "multiple_fix_rate",
+                 "upload_error_explained", "broken_lines_fixed_or_explained")
+
+
 def main(argv=None) -> None:
     parser = argparse.ArgumentParser(description="Replay eval cases against the agent.")
     parser.add_argument("--cases", default=DEFAULT_CASES)
@@ -382,6 +388,11 @@ def main(argv=None) -> None:
                                 "error": f"{type(exc).__name__}: {exc}"})
 
     summary = summarize(results)
+    if args.no_llm:  # agent metrics are meaningless without a model run
+        for key in AGENT_METRICS:
+            summary[key] = None
+        for entry in summary.get("by_kind", {}).values():
+            entry["line_accuracy"] = None
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now().strftime("%Y%m%d_%H%M%S")

@@ -33,7 +33,7 @@ def find_product(ds, predicate):
 
 
 def multi_product(ds, plant, multiple=10):
-    return find_product(ds, plant, lambda p: p.order_multiple == multiple)
+    return find_product(ds, lambda p: p.order_multiple == multiple)
 
 
 def _xls_bytes(rows: list[list], numeric: set[tuple[int, int]] | None = None) -> bytes:

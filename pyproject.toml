@@ -29,5 +29,5 @@ build-backend = "hatchling.build"
 packages = ["backend/medina", "data_access", "data"]
 
 [tool.pytest.ini_options]
-testpaths = ["backend/tests", "data/tests"]
+testpaths = ["backend/tests", "data/tests", "evals/tests"]
 pythonpath = [".", "backend"]
