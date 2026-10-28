@@ -19,6 +19,15 @@ and produces a file in the portal's strict order-upload format. A human always c
 - Meta API budget is tight: cache model responses (`.cache/`), use small eval subsets while
   developing, full eval runs at most 3 times.
 
+## Workflow
+
+- Muse Code (via the `muse-coder` subagent) implements well-specified tasks: data generator, reference catalog,
+  tests, Excel/CSV parsers, widget markup from `widget/SPEC.md`.
+- Claude Code owns architecture, the agent loop and prompts, agent tools, review and fixes after Muse.
+- Commits of Muse tasks end with `[Muse Code]`, e.g. `feat(data): synthetic catalog generator [Muse Code]`.
+  Substantial fixes after review go in a separate commit: `fix: ... (review)`.
+- Every Muse task is logged in `docs/muse-log.md` (task, result, accepted/fixed).
+
 ## Layout
 
 - `data/` — deterministic synthetic data generator (`generate.py`, seeded) and output in `data/synthetic/`.

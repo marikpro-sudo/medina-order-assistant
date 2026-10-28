@@ -7,6 +7,12 @@ missing items, pack-multiple corrections and warnings before upload. A human alw
 
 > Work in progress. Full documentation, metrics and demo video will be added by the submission.
 
+## How it was built
+
+Built with Muse Code (Meta) as the coding agent for implementation tasks and Claude Code for planning,
+architecture and review. The product itself runs entirely on Muse Spark via the Meta Model API.
+Every task delegated to Muse Code and its review outcome is logged in [docs/muse-log.md](docs/muse-log.md).
+
 ## Built during the hackathon
 
 All code in this repository was written during the Meta Global AI Developer Hackathon,
