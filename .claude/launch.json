@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "medina",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": ["run", "uvicorn", "medina.api:app", "--port", "8000"],
+      "port": 8000
+    }
+  ]
+}

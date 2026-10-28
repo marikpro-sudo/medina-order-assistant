@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ФармаОпт B2B · демо</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="demo-banner">Демо-стенд Medina. Портал-макет, все данные синтетические.</div>
+<header class="topbar">
+  <div class="logo">ФармаОпт <span>B2B</span></div>
+  <label class="customer">
+    <span>Клиент</span>
+    <select id="customer"></select>
+  </label>
+  <div id="debt" class="debt"></div>
+  <button id="cart-btn" class="cart-btn" type="button">Корзина <b id="cart-count">0</b></button>
+</header>
+
+<nav class="tabs">
+  <button data-tab="catalog" class="active" type="button">Каталог</button>
+  <button data-tab="cart" type="button">Корзина</button>
+  <button data-tab="upload" type="button">Загрузка заказа</button>
+</nav>
+
+<main>
+  <section id="tab-catalog" class="tab active">
+    <form id="search-form" class="search">
+      <input id="q" type="search" placeholder="Поиск по названию, МНН или штрихкоду" autocomplete="off">
+      <button type="submit">Найти</button>
+    </form>
+    <div id="catalog-info" class="muted"></div>
+    <table class="grid">
+      <thead><tr><th>Товар</th><th>Производитель</th><th>Серия</th><th>Годен до</th><th>Остаток</th><th>Цена, ₸</th><th>Кол-во</th><th></th></tr></thead>
+      <tbody id="catalog"></tbody>
+    </table>
+  </section>
+
+  <section id="tab-cart" class="tab">
+    <h2>Корзина</h2>
+    <table class="grid">
+      <thead><tr><th>Товар</th><th>Код товара</th><th>Кол-во</th><th></th></tr></thead>
+      <tbody id="cart"></tbody>
+    </table>
+    <div class="cart-actions">
+      <button id="cart-clear" type="button" class="secondary">Очистить</button>
+      <button type="button" disabled title="В демо заказ не оформляется">Оформить заказ</button>
+    </div>
+  </section>
+
+  <section id="tab-upload" class="tab">
+    <h2>Загрузка заказа (Order upload)</h2>
+    <p class="muted">Файл .xls или .csv строго из трёх колонок: <b>Штрихкод | Код товара | Количество</b>, все значения — текстом.</p>
+    <form id="upload-form" class="upload">
+      <input id="upload-file" type="file" accept=".xls,.xlsx,.csv">
+      <button type="submit">Загрузить</button>
+    </form>
+    <div id="upload-result"></div>
+  </section>
+</main>
+
+<script src="demo.js"></script>
+</body>
+</html>
