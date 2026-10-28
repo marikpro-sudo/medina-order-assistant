@@ -379,8 +379,11 @@ class Toolbox:
 
     # --- reorder suggestions ---
 
-    def suggest_reorder(self, limit: int = 12) -> dict:
-        """Next-30-day needs from this customer's history: same period last year blended with recent demand."""
+    def suggest_reorder(self, limit: int = 12, seasonal_only: bool = False) -> dict:
+        """Next-30-day needs from this customer's history: same period last year blended with recent demand.
+
+        An item is seasonal when last year's same 30 days exceed 1.3x its 12-month monthly average.
+        """
         today = self.ds.today()
         history = self.ds.history(self.customer.customer_id)
         if not history:
@@ -388,9 +391,10 @@ class Toolbox:
         last_year_from = today - timedelta(days=365)
         last_year_to = last_year_from + timedelta(days=30)
         recent_from = today - timedelta(days=90)
-        season, recent, last_order = defaultdict(int), defaultdict(int), {}
+        season, recent, total, last_order = defaultdict(int), defaultdict(int), defaultdict(int), {}
         for h in history:
             d = date.fromisoformat(h.date)
+            total[h.material_id] += h.qty
             if last_year_from <= d < last_year_to:
                 season[h.material_id] += h.qty
             if d >= recent_from:
@@ -404,14 +408,15 @@ class Toolbox:
                 continue
             monthly_recent = recent[mid] / 3
             expected = 0.6 * season[mid] + 0.4 * monthly_recent
-            if expected <= 0:
+            seasonal = season[mid] > 1.3 * total[mid] / 12
+            if expected <= 0 or (seasonal_only and not seasonal):
                 continue
             qty = max(p.order_multiple, math.ceil(expected / p.order_multiple) * p.order_multiple)
             stock = self._stock(mid)
             reason = (f"Прошлый год, {last_year_from:%d.%m}–{last_year_to:%d.%m}: {season[mid]} уп.; "
                       f"последние 3 мес.: в среднем {monthly_recent:.0f} уп./мес.")
-            if season[mid] > 1.3 * monthly_recent and season[mid] > 0:
-                reason += "; сезонный рост спроса"
+            if seasonal:
+                reason += f"; сезонный рост: в этот период в {season[mid] / (total[mid] / 12):.1f} раза больше среднего"
             batches = self._batches_in_stock(mid)
             out.append({
                 "material_id": mid, "name": p.name_short, "inn": p.inn, "qty": qty, "reason": reason,

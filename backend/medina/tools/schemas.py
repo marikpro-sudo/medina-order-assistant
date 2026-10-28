@@ -58,7 +58,10 @@ TOOL_SCHEMAS = [
     _fn("suggest_reorder",
         "Reorder suggestions for the next 30 days from this customer's order history: same period last "
         "year blended with recent demand, rounded to pack multiples, with stock and a reason per item.",
-        {"limit": {"type": "integer", "description": "default 12"}}, []),
+        {"limit": {"type": "integer", "description": "default 12"},
+         "seasonal_only": {"type": "boolean",
+                           "description": "true for season questions (e.g. cold season): only items whose demand "
+                                          "rises in this period"}}, []),
     _fn("present_order",
         "Record the final result of an order before showing the table: exactly one item per line of the "
         "user's order, in the user's order. status: found | rounded | analog | clarify | unrecognized. "
