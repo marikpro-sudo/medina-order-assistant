@@ -379,6 +379,28 @@ class Toolbox:
 
     # --- reorder suggestions ---
 
+    _seasonality_cache: dict[str, float] | None = None
+
+    def _inn_seasonality(self) -> dict[str, float]:
+        """INN -> its share of demand in the next 30 days last year vs. the average share, over all customers.
+
+        Single-customer history is too noisy to call an item seasonal; the distributor-wide one is not.
+        """
+        if Toolbox._seasonality_cache is None:
+            start = self.ds.today() - timedelta(days=365)
+            window, total = defaultdict(int), defaultdict(int)
+            inn_of = {p.material_id: p.inn for p in self.ds.products()}
+            for c in self.ds.customers():
+                for h in self.ds.history(c.customer_id):
+                    inn = inn_of.get(h.material_id)
+                    total[inn] += h.qty
+                    if start <= date.fromisoformat(h.date) < start + timedelta(days=30):
+                        window[inn] += h.qty
+            # Normalize by the window's share of all demand, so overall volume swings do not count as seasonality.
+            base = sum(window.values()) / max(sum(total.values()), 1)
+            Toolbox._seasonality_cache = {inn: (window[inn] / total[inn]) / base for inn in total if total[inn]}
+        return Toolbox._seasonality_cache
+
     def suggest_reorder(self, limit: int = 12, seasonal_only: bool = False) -> dict:
         """Next-30-day needs from this customer's history: same period last year blended with recent demand.
 
@@ -408,7 +430,7 @@ class Toolbox:
                 continue
             monthly_recent = recent[mid] / 3
             expected = 0.6 * season[mid] + 0.4 * monthly_recent
-            seasonal = season[mid] > 1.3 * total[mid] / 12
+            seasonal = self._inn_seasonality().get(p.inn, 1.0) >= 1.3
             if expected <= 0 or (seasonal_only and not seasonal):
                 continue
             qty = max(p.order_multiple, math.ceil(expected / p.order_multiple) * p.order_multiple)
@@ -416,7 +438,8 @@ class Toolbox:
             reason = (f"Прошлый год, {last_year_from:%d.%m}–{last_year_to:%d.%m}: {season[mid]} уп.; "
                       f"последние 3 мес.: в среднем {monthly_recent:.0f} уп./мес.")
             if seasonal:
-                reason += f"; сезонный рост: в этот период в {season[mid] / (total[mid] / 12):.1f} раза больше среднего"
+                k = self._inn_seasonality()[p.inn]
+                reason += f"; сезонный товар: по всем клиентам доля спроса в этот период в {k:.1f} раза выше обычной"
             batches = self._batches_in_stock(mid)
             out.append({
                 "material_id": mid, "name": p.name_short, "inn": p.inn, "qty": qty, "reason": reason,
