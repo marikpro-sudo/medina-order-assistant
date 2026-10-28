@@ -20,7 +20,8 @@ def _pick(pred):
 
 MID_A = _pick(lambda p: 10 % p.order_multiple == 0)
 MID_B = _pick(lambda p: p.material_id != MID_A)
-MID_C = _pick(lambda p: 20 % p.order_multiple == 0 and p.material_id not in (MID_A, MID_B))
+MID_C = _pick(lambda p: p.order_multiple > 1 and 20 % p.order_multiple == 0  # so 19 is not a multiple
+              and p.material_id not in (MID_A, MID_B))
 
 
 def _order_case():
