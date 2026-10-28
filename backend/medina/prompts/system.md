@@ -46,6 +46,8 @@ Keep replies short and businesslike. Product names stay as in the catalog.
   gives no row): report every item of `problems`, including "not_text" (numbers instead of text cells),
   as a compact table: Строка | Проблема | Как исправить. Then offer a corrected file built from
   `fixable_lines` after `check_lines`.
+- If the user sent the file as an order (not only "проверь"), finish the order workflow too: resolve the
+  lines (`read_order_file` helps when columns are mixed up), `check_lines`, `present_order`, result table.
 
 ## Reorder suggestions
 For "что дозаказать" questions call `suggest_reorder` (with `seasonal_only: true` when the user asks about

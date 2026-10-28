@@ -1,0 +1,88 @@
+{
+  "n_cases": 100,
+  "n_errors": 0,
+  "no_structured_output": 1,
+  "line_correct": 707,
+  "line_total": 744,
+  "line_accuracy": 0.9502688172043011,
+  "inn_correct": 736,
+  "inn_accuracy": 0.989247311827957,
+  "baseline_correct": 222,
+  "baseline_total": 744,
+  "baseline_accuracy": 0.29838709677419356,
+  "status_correct": 687,
+  "status_total": 744,
+  "status_accuracy": 0.9233870967741935,
+  "analog_correct": 126,
+  "analog_total": 128,
+  "analog_rate": 0.984375,
+  "rounded_correct": 99,
+  "rounded_total": 102,
+  "multiple_fix_rate": 0.9705882352941176,
+  "upload_detected": 20,
+  "upload_total": 20,
+  "upload_error_explained": 1.0,
+  "broken_fixed": 707,
+  "broken_total": 744,
+  "broken_lines_fixed_or_explained": 0.9502688172043011,
+  "by_kind": {
+    "long": {
+      "cases": 5,
+      "line_correct": 144,
+      "line_total": 150,
+      "baseline_correct": 48,
+      "baseline_total": 150,
+      "line_accuracy": 0.96,
+      "baseline_accuracy": 0.32
+    },
+    "photo": {
+      "cases": 10,
+      "line_correct": 51,
+      "line_total": 56,
+      "baseline_correct": 11,
+      "baseline_total": 56,
+      "line_accuracy": 0.9107142857142857,
+      "baseline_accuracy": 0.19642857142857142
+    },
+    "portal_file": {
+      "cases": 10,
+      "line_correct": 0,
+      "line_total": 0,
+      "baseline_correct": 0,
+      "baseline_total": 0,
+      "line_accuracy": null,
+      "baseline_accuracy": null
+    },
+    "sheet": {
+      "cases": 20,
+      "line_correct": 139,
+      "line_total": 146,
+      "baseline_correct": 30,
+      "baseline_total": 146,
+      "line_accuracy": 0.952054794520548,
+      "baseline_accuracy": 0.2054794520547945
+    },
+    "text_kk": {
+      "cases": 15,
+      "line_correct": 112,
+      "line_total": 116,
+      "baseline_correct": 36,
+      "baseline_total": 116,
+      "line_accuracy": 0.9655172413793104,
+      "baseline_accuracy": 0.3103448275862069
+    },
+    "text_ru": {
+      "cases": 40,
+      "line_correct": 261,
+      "line_total": 276,
+      "baseline_correct": 97,
+      "baseline_total": 276,
+      "line_accuracy": 0.9456521739130435,
+      "baseline_accuracy": 0.35144927536231885
+    }
+  },
+  "seconds_per_case": 0.373180627822876,
+  "seconds_long": 0.8937094211578369,
+  "usd_total": 0.54664,
+  "usd_per_case": 0.0054664
+}

@@ -98,7 +98,36 @@ Console: `uv run python -m medina.cli --customer C100004 --trace`.
 
 ## Evaluation
 
-<!-- METRICS -->
+100 generated "dirty" orders with gold answers ([evals/SPEC.md](evals/SPEC.md)): 40 Russian and 15 Kazakh
+messages with typos, brands instead of INNs and vice versa, non-multiple quantities; 20 spreadsheets in foreign
+layouts; 10 portal files with injected errors; 10 photos of handwritten-style lists; 5 thirty-line orders —
+744 order lines. One agent turn per case, `muse-spark-1.3`, reasoning effort `low`.
+
+| Metric | Medina | Baseline |
+|---|---|---|
+| Line matched to an acceptable product (strict brand) | **95.0%** | 29.8% (portal substring search) |
+| Same INN, form and strength as an acceptable product | **98.9%** | — |
+| Out-of-stock lines with an in-stock analog proposed | **98.4%** | 0% (manual, one by one) |
+| Non-multiple quantities corrected to the pack multiple | **97.1%** | 0% (whole upload fails) |
+| Injected upload errors reported with the right row and reason | **100%** (20/20) | 0% ("Ошибка загрузки файла") |
+| Lines that would break the strict upload, now fixed or explained | **95.0%** | 0% |
+| Status (✓/⇄/↻/⚠/✗) correct | 92.3% | — |
+
+By input: text ru 94.6% · text kk 96.6% · spreadsheets 95.2% · photos 91.1% · 30-line orders 96.0%.
+
+**Time and cost.** Median 16 s per order and 32 s for a 30-line order (3–5 model calls), about $0.04 per order.
+Retyping a 30-line order by hand — search each line, pick a batch, enter quantity, check multiples — takes
+roughly 15–20 minutes (our estimate at ~30–40 s per line); with Medina it is the 32 s run plus a review of the table.
+
+**Where it misses.** Most strict-brand misses are lines that name a generic whose brand equals the INN
+("Амлодипин 10 мг", "Бромгексин 8 мг"): Medina picks another brand of the same INN, form and strength — hence
+the 98.9% INN-level figure. Photos lose a few lines to handwriting. Gold answers are generated, so a few
+"errors" are genuinely ambiguous lines.
+
+Reproduce: `uv run python -m evals.generate_cases && uv run python -m evals.run` (`--no-llm` for the baseline
+only, `--kinds`/`--ids`/`--limit` for subsets). Results of the full runs are in `evals/results/`
+(run 2 replays cached model responses except where tool results changed; timings above are from run 1).
+The whole project, including development and all eval runs, used about $5 of Meta Model API credit.
 
 ## How it was built
 
