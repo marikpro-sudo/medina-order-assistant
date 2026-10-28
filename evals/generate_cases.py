@@ -194,7 +194,9 @@ def render_name_part(rng, ctx, p, use_inn: bool, brand_only: bool,
         if short:
             parts.append(short)
     if has_pack:
-        parts.append(p.pack)
+        m = re.search(r"№\s*\d+", p.name_short)  # Product has no pack field; it is the tail of name_short
+        if m:
+            parts.append(m.group(0))
     return " ".join(x for x in parts if x)
 
 
