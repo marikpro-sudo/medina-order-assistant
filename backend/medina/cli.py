@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import sys
 
 from data_access.synthetic import default_source
 from medina.agent import Agent
@@ -16,6 +17,8 @@ def main() -> None:
     ap.add_argument("--trace", action="store_true", help="print tool calls")
     ap.add_argument("--no-cache", action="store_true")
     args = ap.parse_args()
+    for stream in (sys.stdin, sys.stdout):  # Windows consoles default to a legacy code page
+        stream.reconfigure(encoding="utf-8")
 
     llm = LLM(model=args.model, reasoning_effort=args.effort, use_cache=not args.no_cache)
     agent = Agent(default_source(), args.customer, llm, ROOT / ".cache" / "files")
