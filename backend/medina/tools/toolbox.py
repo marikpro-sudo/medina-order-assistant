@@ -5,8 +5,10 @@ never from model arguments, so the model cannot query another customer's data.
 """
 
 import math
+import re
 import uuid
-from datetime import date
+from collections import defaultdict
+from datetime import date, timedelta
 from pathlib import Path
 
 import xlwt
@@ -14,6 +16,7 @@ import xlwt
 from data.schema import PLANTS, Batch, Product
 from data_access.base import DataSource
 from data_access.search import CatalogSearch, product_form_family
+from medina.parsers.order_table import parse_order_file, read_cells
 
 SHORT_EXPIRY_DAYS = 90
 UPLOAD_HEADERS = ("Штрихкод", "Код товара", "Количество")
@@ -29,6 +32,7 @@ class Toolbox:
         self.files_dir = files_dir
         self.search = CatalogSearch(ds.products())
         self.attachments: dict[str, bytes] = {}  # spreadsheets the user attached in this session
+        self.last_order: list[dict] | None = None  # set by present_order; read by the widget API and evals
 
     # --- helpers ---
 
@@ -248,6 +252,181 @@ class Toolbox:
         return {"file_id": file_id, "filename": path.name, "rows": len(rows), "report": report}
 
 
+    def present_order(self, lines: list[dict]) -> dict:
+        """Record the final structured result of an order turn (one item per user line, in order)."""
+        statuses = {"found", "analog", "rounded", "clarify", "unrecognized"}
+        clean, problems = [], []
+        for i, ln in enumerate(lines, start=1):
+            mid = str(ln.get("material_id") or "")
+            status = ln.get("status", "")
+            p = self.ds.get_product(mid) if mid else None
+            if status not in statuses:
+                problems.append(f"line {i}: unknown status {status!r}")
+            if mid and p is None:
+                problems.append(f"line {i}: unknown material_id {mid}")
+            try:
+                qty = int(ln.get("qty") or 0)
+            except (TypeError, ValueError):
+                qty = 0
+            if p and qty and qty % p.order_multiple:
+                problems.append(f"line {i}: qty {qty} is not a multiple of {p.order_multiple}")
+            clean.append({"source": str(ln.get("source", "")), "material_id": mid or None,
+                          "qty": qty, "status": status, "replaces": ln.get("replaces")})
+        self.last_order = clean
+        return {"ok": not problems, "problems": problems, "lines": len(clean)}
+
+    # --- attached files ---
+
+    def _attachment(self, file_name: str) -> bytes | None:
+        if file_name in self.attachments:
+            return self.attachments[file_name]
+        if len(self.attachments) == 1:  # the model may shorten or mistype the name
+            return next(iter(self.attachments.values()))
+        return None
+
+    def read_order_file(self, file_name: str) -> dict:
+        """Extract order lines from a spreadsheet in any layout; resolve codes deterministically."""
+        data = self._attachment(file_name)
+        if data is None:
+            return {"error": f"file {file_name} not attached", "attached": list(self.attachments)}
+        try:
+            parsed = parse_order_file(data, file_name)
+        except ValueError as e:
+            return {"error": f"cannot read file: {e}"}
+        lines = []
+        for ln in parsed["lines"]:
+            p = self.ds.get_product(ln["material_id"]) if ln["material_id"] else None
+            if p is None and ln["ean"]:
+                p = self.ds.get_by_ean(ln["ean"])
+            item = {"row": ln["row"], "text": ln["name"], "qty": ln["qty"], "qty_raw": ln["qty_raw"]}
+            if p is not None:
+                item["resolved"] = {"material_id": p.material_id, "name": p.name_short,
+                                    "order_multiple": p.order_multiple}
+            else:
+                item["search_query"] = ln["name"] or ln["ean"] or ln["material_id"]
+            lines.append(item)
+        return {"file": file_name, "header_row": parsed["header_row"], "columns": parsed["columns"],
+                "warnings": parsed["warnings"], "lines": lines}
+
+    def validate_upload_file(self, file_name: str) -> dict:
+        """Row-by-row check of a file meant for the portal's strict order upload."""
+        data = self._attachment(file_name)
+        if data is None:
+            return {"error": f"file {file_name} not attached", "attached": list(self.attachments)}
+        try:
+            rows = read_cells(data, file_name)
+        except ValueError as e:
+            return {"file": file_name, "would_fail": True,
+                    "errors": [{"row": None, "code": "unreadable", "message": f"Файл не читается: {e}"}]}
+        start = 1 if rows and rows[0] and not rows[0][0].value.strip().isdigit() else 0
+        header_ok = start == 1 and [c.value.strip().lower() for c in rows[0][:3]] == \
+            [h.lower() for h in UPLOAD_HEADERS]
+        problems, fixed, seen = [], [], {}
+
+        def err(row: int, code: str, message: str, fix: str | None = None) -> None:
+            problems.append({"row": row, "code": code, "message": message, **({"fix": fix} if fix else {})})
+
+        for i, r in enumerate(rows[start:], start=start + 1):
+            if not any(c.value.strip() for c in r):
+                continue
+            if len(r) != 3:
+                err(i, "column_count", f"Колонок: {len(r)}, нужно 3 (Штрихкод, Код товара, Количество)")
+                continue
+            ean, mid, qty = (c.value.strip() for c in r)
+            if not all(c.is_text for c in r):
+                err(i, "not_text", "Значения сохранены как числа, портал принимает только текст",
+                    "сохранить ячейки в текстовом формате")
+            p_by_id = self.ds.get_product(mid) if re.fullmatch(r"\d{18}", mid) else None
+            p_by_ean = self.ds.get_by_ean(ean) if re.fullmatch(r"\d{13}", ean) else None
+            if p_by_id is None:
+                err(i, "bad_material_id", f"Код товара «{mid}» не найден",
+                    f"по штрихкоду: {p_by_ean.material_id}" if p_by_ean else None)
+            if re.fullmatch(r"\d{13}", ean) and not _ean_valid(ean):
+                err(i, "bad_ean", f"Штрихкод «{ean}»: неверная контрольная цифра",
+                    f"по коду товара: {p_by_id.ean13}" if p_by_id else None)
+            elif p_by_ean is None:
+                err(i, "bad_ean", f"Штрихкод «{ean}» не найден",
+                    f"по коду товара: {p_by_id.ean13}" if p_by_id else None)
+            if p_by_id and p_by_ean and p_by_id.material_id != p_by_ean.material_id:
+                err(i, "ean_code_mismatch", f"Штрихкод относится к «{p_by_ean.name_short}», "
+                    f"а код — к «{p_by_id.name_short}»")
+            p = p_by_id or p_by_ean
+            q = int(qty) if qty.isdigit() else 0
+            if q <= 0:
+                err(i, "bad_qty", f"Количество «{qty}» должно быть целым числом больше нуля")
+            if p is None:
+                continue
+            if q > 0 and q % p.order_multiple:
+                rounded = math.ceil(q / p.order_multiple) * p.order_multiple
+                err(i, "not_multiple", f"Кратность {p.order_multiple}: {q} не кратно",
+                    f"заменить на {rounded}")
+                q = rounded
+            if p.material_id in seen:
+                err(i, "duplicate", f"Товар уже есть в строке {seen[p.material_id]}", "объединить строки")
+            seen.setdefault(p.material_id, i)
+            if q > 0:
+                fixed.append({"material_id": p.material_id, "qty": q, "row": i, "name": p.name_short})
+        blocking = {"column_count", "not_text", "bad_material_id", "bad_ean", "ean_code_mismatch", "bad_qty"}
+        return {
+            "file": file_name,
+            "rows_total": len(rows) - start,
+            "header_ok": header_ok,
+            "would_fail": any(p["code"] in blocking for p in problems),
+            "problems": problems,
+            "fixable_lines": fixed,
+            "note": "Then run check_lines on fixable_lines for stock, prescription and expiry.",
+        }
+
+    # --- reorder suggestions ---
+
+    def suggest_reorder(self, limit: int = 12) -> dict:
+        """Next-30-day needs from this customer's history: same period last year blended with recent demand."""
+        today = self.ds.today()
+        history = self.ds.history(self.customer.customer_id)
+        if not history:
+            return {"suggestions": [], "note": "no order history"}
+        last_year_from = today - timedelta(days=365)
+        last_year_to = last_year_from + timedelta(days=30)
+        recent_from = today - timedelta(days=90)
+        season, recent, last_order = defaultdict(int), defaultdict(int), {}
+        for h in history:
+            d = date.fromisoformat(h.date)
+            if last_year_from <= d < last_year_to:
+                season[h.material_id] += h.qty
+            if d >= recent_from:
+                recent[h.material_id] += h.qty
+            last_order[h.material_id] = max(last_order.get(h.material_id, ""), h.date)
+
+        out = []
+        for mid in set(season) | set(recent):
+            p = self.ds.get_product(mid)
+            if p is None:
+                continue
+            monthly_recent = recent[mid] / 3
+            expected = 0.6 * season[mid] + 0.4 * monthly_recent
+            if expected <= 0:
+                continue
+            qty = max(p.order_multiple, math.ceil(expected / p.order_multiple) * p.order_multiple)
+            stock = self._stock(mid)
+            reason = (f"Прошлый год, {last_year_from:%d.%m}–{last_year_to:%d.%m}: {season[mid]} уп.; "
+                      f"последние 3 мес.: в среднем {monthly_recent:.0f} уп./мес.")
+            if season[mid] > 1.3 * monthly_recent and season[mid] > 0:
+                reason += "; сезонный рост спроса"
+            batches = self._batches_in_stock(mid)
+            out.append({
+                "material_id": mid, "name": p.name_short, "inn": p.inn, "qty": qty, "reason": reason,
+                "last_ordered": last_order[mid], "stock_in_branch": stock,
+                "available": stock >= qty,
+                "nearest_expiry": batches[0].expiry_date if batches else None,
+                "_score": expected,
+            })
+        out.sort(key=lambda x: -x["_score"])
+        for x in out:
+            del x["_score"]
+        return {"period": f"{today:%d.%m.%Y} + 30 дней", "suggestions": out[:limit],
+                "note": "Unavailable items: offer find_analogs. Suggestions are based on order history only."}
+
+
 def _write_xls(path: Path, rows: list[tuple[str, str, str]]) -> None:
     wb = xlwt.Workbook(encoding="utf-8")
     ws = wb.add_sheet("Order")
@@ -258,6 +437,11 @@ def _write_xls(path: Path, rows: list[tuple[str, str, str]]) -> None:
         for col, value in enumerate(row):
             ws.write(r, col, value, text)
     wb.save(str(path))
+
+
+def _ean_valid(ean: str) -> bool:
+    total = sum(int(d) * (1 if i % 2 == 0 else 3) for i, d in enumerate(ean[:12]))
+    return (10 - total % 10) % 10 == int(ean[12])
 
 
 def _neg_date(iso: str) -> int:

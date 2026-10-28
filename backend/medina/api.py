@@ -4,7 +4,6 @@ In production the customer id comes from the portal session (signed by the porta
 not from a free form field; see integration/prestashop/.
 """
 
-import base64
 import re
 import threading
 import uuid
@@ -20,13 +19,12 @@ from pydantic import BaseModel
 from data_access.synthetic import default_source
 from medina.agent import Agent
 from medina.llm import LLM, ROOT
-from medina.parsers.spreadsheet import read_rows, rows_to_text
+from medina.inputs import UnsupportedFile, build_user_content
+from medina.parsers.spreadsheet import read_rows
 
 FILES_DIR = ROOT / ".cache" / "files"
 MAX_UPLOAD = 10 * 1024 * 1024
 MAX_SESSIONS = 200
-IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
-SHEET_EXT = (".xlsx", ".xls", ".csv")
 
 app = FastAPI(title="Medina")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -52,21 +50,13 @@ def _get_session(session_id: str, customer_id: str) -> tuple[str, Agent, threadi
     return session_id, *entry
 
 
-def _user_content(message: str, file: UploadFile | None, data: bytes) -> str | list:
+def _user_content(agent: Agent, message: str, file: UploadFile | None, data: bytes) -> str | list:
     if file is None:
         return message
-    name = file.filename or "file"
-    if (file.content_type or "") in IMAGE_TYPES:
-        url = f"data:{file.content_type};base64,{base64.b64encode(data).decode()}"
-        return [{"type": "text", "text": f"{message}\n\n[Attached photo: {name}]"},
-                {"type": "image_url", "image_url": {"url": url}}]
-    if name.lower().endswith(SHEET_EXT):
-        try:
-            rows = read_rows(data, name)
-        except Exception as e:  # malformed file: let the model explain it to the user
-            return f"{message}\n\n[Attached file {name} could not be read: {e}]"
-        return f"{message}\n\n[Attached file {name}, {len(rows)} rows]\n{rows_to_text(rows)}"
-    raise HTTPException(415, "unsupported file type")
+    try:
+        return build_user_content(agent, message, file.filename or "file", file.content_type, data)
+    except UnsupportedFile:
+        raise HTTPException(415, "unsupported file type")
 
 
 @app.post("/api/chat")
@@ -84,8 +74,8 @@ def chat(
     if not message.strip() and file is None:
         raise HTTPException(400, "empty message")
     session_id, agent, lock = _get_session(session_id, customer_id)
-    content = _user_content(message.strip(), file, data)
     with lock:  # one turn at a time per conversation
+        content = _user_content(agent, message.strip(), file, data)
         reply = agent.ask(content)
         files = [
             {"file_id": t["result"]["file_id"], "filename": t["result"]["filename"],
@@ -93,7 +83,7 @@ def chat(
             for t in agent.trace
             if t["tool"] == "build_upload_file" and "file_id" in t["result"]
         ]
-    return {"session_id": session_id, "reply": reply, "files": files}
+    return {"session_id": session_id, "reply": reply, "files": files, "order": agent.tools.last_order}
 
 
 class ResetRequest(BaseModel):
@@ -161,6 +151,7 @@ def demo_order_upload(file: UploadFile = File(...)):
         rows = read_rows(data, file.filename or "")
     except Exception:
         return {"ok": False, "error": "Ошибка загрузки файла"}
+    rows = [r for r in rows if any(c.strip() for c in r)]  # read_rows keeps empty rows for row numbers
     if rows and not rows[0][0].isdigit():
         rows = rows[1:]  # header row
     lines = []

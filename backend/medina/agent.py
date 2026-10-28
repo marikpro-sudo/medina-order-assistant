@@ -26,6 +26,7 @@ class Agent:
 
     def ask(self, user_content: str | list) -> str:
         self._drop_old_images()
+        self.tools.last_order = None
         self.messages.append({"role": "user", "content": user_content})
         self.trace = []
         for _ in range(MAX_STEPS):

@@ -45,6 +45,35 @@ TOOL_SCHEMAS = [
     _fn("get_customer_status",
         "Customer's branch, delivery points, credit limit and overdue debt.",
         {}, []),
+    _fn("read_order_file",
+        "Extract order lines from an attached spreadsheet in any layout (any column names, title rows, "
+        "Russian/Kazakh). Lines with a valid barcode or product code come back already resolved; "
+        "the rest come with a search_query for search_products.",
+        {"file_name": {"type": "string"}}, ["file_name"]),
+    _fn("validate_upload_file",
+        "Check an attached file meant for the portal's strict order upload (Штрихкод | Код товара | "
+        "Количество, text cells) row by row: why the portal would reject it and how to fix each row. "
+        "Returns fixable_lines that can be passed to check_lines and build_upload_file.",
+        {"file_name": {"type": "string"}}, ["file_name"]),
+    _fn("suggest_reorder",
+        "Reorder suggestions for the next 30 days from this customer's order history: same period last "
+        "year blended with recent demand, rounded to pack multiples, with stock and a reason per item.",
+        {"limit": {"type": "integer", "description": "default 12"}}, []),
+    _fn("present_order",
+        "Record the final result of an order before showing the table: exactly one item per line of the "
+        "user's order, in the user's order. status: found | rounded | analog | clarify | unrecognized. "
+        "For analog set replaces to the unavailable product's material_id. material_id null if none.",
+        {"lines": {"type": "array", "items": {
+            "type": "object",
+            "properties": {
+                "source": {"type": "string", "description": "the user's original line text"},
+                "material_id": {"type": ["string", "null"]},
+                "qty": {"type": "integer"},
+                "status": {"type": "string", "enum": ["found", "rounded", "analog", "clarify", "unrecognized"]},
+                "replaces": {"type": ["string", "null"]},
+            },
+            "required": ["source", "material_id", "qty", "status"]}}},
+        ["lines"]),
     _fn("build_upload_file",
         "Create the .xls file in the portal's order-upload format from the final lines. "
         "Quantities must already be multiples of order_multiple (use the qty from check_lines).",
@@ -58,5 +87,9 @@ TOOL_METHODS = {
     "find_analogs": "find_analogs",
     "check_lines": "check_lines",
     "get_customer_status": "get_customer_status",
+    "read_order_file": "read_order_file",
+    "validate_upload_file": "validate_upload_file",
+    "suggest_reorder": "suggest_reorder",
+    "present_order": "present_order",
     "build_upload_file": "build_upload_file",
 }
