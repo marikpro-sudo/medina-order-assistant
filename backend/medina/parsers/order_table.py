@@ -115,6 +115,15 @@ def detect_columns(rows: list[list[Cell]], header_idx: int | None) -> ColumnMap:
     else:
         data = rows[:_DATA_SCAN_ROWS]
     width = max([len(header)] + [len(row) for row in data] + [0])
+    # Headers lie ("Штрихкод" over product names): a code column must mostly hold codes.
+    for role, is_code in (("ean", _ean_ok), ("material_id", _material_ok)):
+        col = found.get(role)
+        if col is not None and _share(data, col, is_code) < 0.6:
+            del found[role]
+            if "name" not in found and _share(data, col, _name_ok) >= 0.6:
+                found["name"] = col
+            else:
+                claimed.discard(col)
     for role, is_code in (("ean", _ean_ok), ("material_id", _material_ok)):
         if role not in found:
             col = _pick_share(data, width, claimed, is_code)
@@ -354,6 +363,11 @@ def _material_ok(value: str) -> bool:
 
 def _name_ok(value: str) -> bool:
     return len(_LETTER_RE.findall(value)) >= 3
+
+
+def _share(data, col: int, ok) -> float:
+    values = [row[col].value for row in data if col < len(row) and row[col].value]
+    return sum(1 for v in values if ok(v)) / len(values) if values else 0.0
 
 
 def _pick_share(data, width: int, claimed: set[int], ok, threshold: bool = True):
