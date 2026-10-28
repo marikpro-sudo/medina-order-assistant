@@ -172,7 +172,7 @@ def test_parse_qty(raw, expected):
 
 def test_unsupported_extension():
     with pytest.raises(ValueError):
-        read_cells(b"Штрихкод", "order.txt")
+        read_cells("Штрихкод".encode(), "order.txt")
 
 
 def test_corrupt_file():
