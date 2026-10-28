@@ -123,8 +123,16 @@ def _rate(numerator: int, denominator: int):
     return numerator / denominator if denominator else None
 
 
+def _in_stock(case: dict, material_id: str) -> bool:
+    ds = default_source()
+    customer = ds.get_customer(case.get("customer_id", ""))
+    plant = customer.branch_plant if customer else None
+    return sum(b.qty_available for b in ds.batches(material_id, plant)) > 0
+
+
 def _score_order(case: dict, prediction) -> dict:
     products = default_source().products()
+    by_id = {p.material_id: p for p in products}
     ids = {p.material_id for p in products}
     eans = {p.ean13 for p in products}
     gold = case.get("gold", [])
@@ -148,17 +156,22 @@ def _score_order(case: dict, prediction) -> dict:
         else:
             line_ok = bool(mid) and mid in acceptable
         out["line_correct"] += line_ok
-        status_ok = status == expect or (
-            expect in ("found", "rounded") and status in ("found", "rounded")
-            and qty is not None and qty == gold_qty
-        )
+        # found / rounded / analog are judged against the product the model chose: when the line names no
+        # pack, any acceptable pack variant is right, and each variant has its own stock and pack multiple.
+        chosen = by_id.get(mid) if mid else None
+        qty_valid = bool(chosen) and qty is not None and qty > 0 and qty % chosen.order_multiple == 0
+        resolved = {"found", "rounded", "analog"}
+        if expect in resolved:
+            status_ok = status in resolved and line_ok and qty_valid
+        else:
+            status_ok = status == expect
         out["status_correct"] += status_ok
         if expect == "analog":
             out["analog_total"] += 1
-            out["analog_correct"] += bool(mid) and mid in acceptable
+            out["analog_correct"] += line_ok and bool(chosen) and _in_stock(case, mid)
         if expect == "rounded":
             out["rounded_total"] += 1
-            out["rounded_correct"] += qty is not None and qty == gold_qty
+            out["rounded_correct"] += line_ok and qty_valid
         base_mid = baseline_line(str(line.get("source") or ""), products)
         if expect == "unrecognized":
             out["baseline_correct"] += not base_mid

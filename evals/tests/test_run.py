@@ -13,9 +13,14 @@ from evals.run import (
     summarize,
 )
 
-MID_A = "100000000000000101"
-MID_B = "100000000000000102"
-MID_C = "100000000000000103"
+def _pick(pred):
+    # Real products: scoring checks quantities against the chosen product's pack multiple.
+    return next(p.material_id for p in default_source().products() if pred(p))
+
+
+MID_A = _pick(lambda p: 10 % p.order_multiple == 0)
+MID_B = _pick(lambda p: p.material_id != MID_A)
+MID_C = _pick(lambda p: 20 % p.order_multiple == 0 and p.material_id not in (MID_A, MID_B))
 
 
 def _order_case():
