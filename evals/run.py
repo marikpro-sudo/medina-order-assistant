@@ -18,6 +18,7 @@ from pathlib import Path
 
 from rapidfuzz import fuzz
 
+from data_access.search import product_form_family
 from data_access.synthetic import default_source
 from medina.agent import Agent
 from medina.inputs import build_user_content
@@ -109,6 +110,7 @@ def _empty_scores(case: dict) -> dict:
     return {
         "id": case.get("id"), "kind": case.get("kind"),
         "line_correct": 0, "line_total": 0, "line_accuracy": None,
+        "inn_correct": 0, "inn_accuracy": None,
         "baseline_correct": 0, "baseline_total": 0, "baseline_accuracy": None,
         "status_correct": 0, "status_total": 0, "status_accuracy": None,
         "analog_correct": 0, "analog_total": 0, "analog_rate": None,
@@ -121,6 +123,11 @@ def _empty_scores(case: dict) -> dict:
 
 def _rate(numerator: int, denominator: int):
     return numerator / denominator if denominator else None
+
+
+def _same_inn_form_strength(a, b) -> bool:
+    return (a.inn == b.inn and a.strength == b.strength
+            and product_form_family(a.dosage_form) == product_form_family(b.dosage_form))
 
 
 def _in_stock(case: dict, material_id: str) -> bool:
@@ -156,9 +163,14 @@ def _score_order(case: dict, prediction) -> dict:
         else:
             line_ok = bool(mid) and mid in acceptable
         out["line_correct"] += line_ok
+        chosen = by_id.get(mid) if mid else None
+        # INN-level: same active ingredient, form family and strength as an acceptable product. Lines that name
+        # a generic whose brand equals the INN ("Амлодипин 10 мг") are ambiguous between brands of that INN.
+        inn_ok = line_ok or (expect != "unrecognized" and bool(chosen) and any(
+            _same_inn_form_strength(chosen, by_id[a]) for a in acceptable if a in by_id))
+        out["inn_correct"] += inn_ok
         # found / rounded / analog are judged against the product the model chose: when the line names no
         # pack, any acceptable pack variant is right, and each variant has its own stock and pack multiple.
-        chosen = by_id.get(mid) if mid else None
         qty_valid = bool(chosen) and qty is not None and qty > 0 and qty % chosen.order_multiple == 0
         resolved = {"found", "rounded", "analog"}
         if expect in resolved:
@@ -181,6 +193,7 @@ def _score_order(case: dict, prediction) -> dict:
             out["broken_total"] += 1
             out["broken_fixed"] += line_ok or status_ok
     out["line_accuracy"] = _rate(out["line_correct"], out["line_total"])
+    out["inn_accuracy"] = _rate(out["inn_correct"], out["line_total"])
     out["baseline_accuracy"] = _rate(out["baseline_correct"], out["baseline_total"])
     out["status_accuracy"] = _rate(out["status_correct"], out["status_total"])
     out["analog_rate"] = _rate(out["analog_correct"], out["analog_total"])
@@ -222,6 +235,7 @@ def summarize(results: list[dict]) -> dict:
     summary["no_structured_output"] = sum(1 for r in results if r.get("no_structured_output"))
     for num_key, den_key, rate_key in [
         ("line_correct", "line_total", "line_accuracy"),
+        ("inn_correct", "line_total", "inn_accuracy"),
         ("baseline_correct", "baseline_total", "baseline_accuracy"),
         ("status_correct", "status_total", "status_accuracy"),
         ("analog_correct", "analog_total", "analog_rate"),
@@ -273,6 +287,7 @@ def markdown_summary(summary: dict) -> str:
         f"(errors: {summary['n_errors']}, no structured output: {summary['no_structured_output']})",
         f"- line_accuracy: {_fmt(summary['line_accuracy'])} "
         f"(baseline {_fmt(summary['baseline_accuracy'])}, n={summary['line_total']})",
+        f"- inn_accuracy (same INN, form, strength): {_fmt(summary['inn_accuracy'])}",
         f"- status_accuracy: {_fmt(summary['status_accuracy'])} (n={summary['status_total']})",
         f"- analog_rate: {_fmt(summary['analog_rate'])} (n={summary['analog_total']})",
         f"- multiple_fix_rate: {_fmt(summary['multiple_fix_rate'])} (n={summary['rounded_total']})",
@@ -353,7 +368,7 @@ def run_case(case: dict, llm: LLM) -> dict:
                     "error": f"{type(exc).__name__}: {exc}"}
 
 
-AGENT_METRICS = ("line_accuracy", "status_accuracy", "analog_rate", "multiple_fix_rate",
+AGENT_METRICS = ("line_accuracy", "inn_accuracy", "status_accuracy", "analog_rate", "multiple_fix_rate",
                  "upload_error_explained", "broken_lines_fixed_or_explained")
 
 

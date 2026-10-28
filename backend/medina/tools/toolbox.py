@@ -298,6 +298,9 @@ class Toolbox:
             p = self.ds.get_product(ln["material_id"]) if ln["material_id"] else None
             if p is None and ln["ean"]:
                 p = self.ds.get_by_ean(ln["ean"])
+            if p is None and re.fullmatch(r"\d{13}|\d{18}", ln["name"].strip()):  # code typed in the name column
+                code = ln["name"].strip()
+                p = self.ds.get_by_ean(code) if len(code) == 13 else self.ds.get_product(code)
             item = {"row": ln["row"], "text": ln["name"], "qty": ln["qty"], "qty_raw": ln["qty_raw"]}
             if p is not None:
                 item["resolved"] = {"material_id": p.material_id, "name": p.name_short,
