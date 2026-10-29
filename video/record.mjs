@@ -1,7 +1,8 @@
 // Records the demo scenes with Playwright. `node record.mjs --warm` runs the same flow without recording
 // to fill the backend's model cache, so the recorded run shows real answers without long waits.
-// Output: recordings/<scene>.webm and recordings/timeline.json (event times per scene, ms).
+// Output: public/recordings/<scene>.mp4 and public/recordings/timeline.json (event times per scene, ms).
 
+import { execFileSync } from "node:child_process";
 import { chromium } from "playwright";
 import fs from "node:fs";
 import path from "node:path";
@@ -58,7 +59,12 @@ async function scene(browser, name, fn) {
     const file = path.join(OUT, `${name}.webm`);
     await video.saveAs(file);
     await video.delete();
-    timeline[name] = { file: `${name}.webm`, duration, events };
+    // Remotion's frame extraction is unreliable on Playwright's VP8 webm: re-encode to H.264, 30 fps,
+    // short GOP for fast seeking.
+    execFileSync("npx", ["remotion", "ffmpeg", "-loglevel", "error", "-y", "-i", file, "-r", "30", "-c:v", "libx264",
+      "-preset", "fast", "-crf", "18", "-g", "15", "-pix_fmt", "yuv420p", file.replace(".webm", ".mp4")],
+      { stdio: "inherit", shell: true });
+    timeline[name] = { file: `${name}.mp4`, duration, events };
   }
 }
 
