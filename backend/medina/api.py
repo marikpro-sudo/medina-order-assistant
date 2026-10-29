@@ -4,6 +4,7 @@ In production the customer id comes from the portal session (signed by the porta
 not from a free form field; see integration/prestashop/.
 """
 
+import logging
 import os
 import re
 import threading
@@ -16,6 +17,7 @@ from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from openai import APIError
 from pydantic import BaseModel
 
 from data_access.synthetic import default_source
@@ -28,6 +30,7 @@ FILES_DIR = ROOT / ".cache" / "files"
 MAX_UPLOAD = 10 * 1024 * 1024
 MAX_SESSIONS = 200
 
+log = logging.getLogger("medina")
 app = FastAPI(title="Medina")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
@@ -81,6 +84,9 @@ LIMIT_REPLIES = {
     "budget": {"ru": "Демо-лимит запросов к модели на сегодня исчерпан. Посмотрите видео-демо или запустите проект локально.",
                "kk": "Модельге сұраныстардың демо-лимиті таусылды. Видео-демоны қараңыз немесе жобаны жергілікті іске қосыңыз.",
                "en": "The demo's model budget is used up. Please watch the demo video or run the project locally."},
+    "model": {"ru": "Модель сейчас недоступна, попробуйте позже.",
+              "kk": "Модель қазір қолжетімсіз, кейінірек қайталап көріңіз.",
+              "en": "The model is unavailable right now, please try again later."},
     "rate": {"ru": "Слишком много сообщений за час с одного адреса. Попробуйте чуть позже.",
              "kk": "Бір мекенжайдан сағатына хабарлама тым көп. Кейінірек қайталап көріңіз.",
              "en": "Too many messages from one address this hour. Please try again a bit later."},
@@ -141,6 +147,13 @@ def chat(
         except BudgetExceeded:
             del agent.messages[history_len:]  # roll back the unfinished turn so the session stays valid
             return {"session_id": session_id, "reply": LIMIT_REPLIES["budget"][lang_key], "files": [], "order": None}
+        except (APIError, KeyError) as e:  # model API unreachable/refused, or no API key configured
+            del agent.messages[history_len:]
+            status = getattr(e, "status_code", None)
+            detail = f"{type(e).__name__}{f' {status}' if status else ''}"
+            log.error("model call failed: %s: %s", detail, str(e)[:500])
+            return {"session_id": session_id, "files": [], "order": None,
+                    "reply": f"{LIMIT_REPLIES['model'][lang_key]} ({detail})"}
         files = [
             {"file_id": t["result"]["file_id"], "filename": t["result"]["filename"],
              "url": f"/api/files/{t['result']['file_id']}"}
