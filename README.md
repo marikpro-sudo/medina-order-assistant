@@ -19,6 +19,17 @@ raw input to a validated upload file. Everything here was built during the hacka
 synthetic data; model answers are replayed from the response cache, so waiting time is cut (real answers take
 5–16 s). The video is built from code in [`video/`](video/) (Playwright recording + Remotion).
 
+## Live demo
+
+**https://medina-demo.onrender.com/demo/** — the mock portal with Medina (pick a customer at the top; the ones
+marked «ДЗ» have overdue debt; `?lang=en` for the English UI). Free hosting: the first visit after a quiet spell may
+take up to a minute.
+
+The example cards in the widget answer from cached Muse Spark responses. Free-form requests call the model live;
+at the time of submission Meta Model API returns `404 model_not_found` for calls from cloud hosts (a known issue
+Meta is investigating — the same key works from a local machine), so if Medina says live calls are unavailable,
+use the cards or run the project locally (below). The public demo has a spend cap and a per-IP rate limit.
+
 ## The problem
 
 A distributor with ~7,000 SKUs serves thousands of pharmacies and clinics through a B2B portal. The portal's

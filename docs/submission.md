@@ -5,6 +5,7 @@ Ready-to-paste answers for the Cerebral Valley submission form. Adjust lengths t
 ## Links
 - Repository (public): https://github.com/marikpro-sudo/medina-order-assistant
 - Demo video (3 min): https://youtu.be/yqW_9d5NMjA
+- Live demo: https://medina-demo.onrender.com/demo/ (example cards answer from cached model responses; live calls from cloud hosts currently hit a known Meta Model API 404 issue — see README)
 
 ## Track and problem statement
 - Track: **Startups**
