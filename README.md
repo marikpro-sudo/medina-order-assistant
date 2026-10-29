@@ -7,7 +7,9 @@ order-upload format. It finds in-stock analogs for missing items, rounds quantit
 flags prescription items, short expiry and overdue debt *before* upload, and explains why a file would be
 rejected row by row. A human always confirms; Medina never places an order or gives medical advice.
 
-Track: Startup · Theme: *Build for Your World*.
+Meta Global AI Developer Hackathon · Track: **Startups** · Problem statement: **Build for Your World** ·
+also a fit for **Best Agentic Use-Case**: a multi-step Muse Spark agent with 10 tools that takes an order from
+raw input to a validated upload file. Everything here was built during the hackathon (see the last section).
 
 ## Demo video (3 min)
 
@@ -147,4 +149,8 @@ Muse commits are tagged `[Muse Code]`, review fixes are separate `fix: … (revi
 ## Built during the hackathon
 
 All code in this repository was written during the Meta Global AI Developer Hackathon,
-starting 2026-10-28. The first commit (`8753298`) is the starting point. All data is synthetic.
+2026-10-28 – 2026-11-04. The first commit (`8753298`) is the starting point; nothing was carried over from an
+earlier codebase. Built during the hackathon: the Muse Spark agent and its tools, catalog search, text / Excel /
+photo intake, the strict upload validator, reorder suggestions, the FastAPI backend, the embeddable widget
+(ru/kk/en), the mock portal, the PrestaShop module sketch, the synthetic data generator, the 100-case evals and
+the demo video pipeline. Everything shown in the demo video is this code running on synthetic data.

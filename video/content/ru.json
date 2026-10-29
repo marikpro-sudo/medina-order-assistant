@@ -7,7 +7,7 @@
       "seconds": 5,
       "title": "Medina",
       "subtitle": "ИИ-ассистент заказа для B2B-портала фармдистрибьютора",
-      "footer": "Meta Global AI Developer Hackathon · работает на Muse Spark"
+      "footer": "Meta Global AI Developer Hackathon · всё в этом видео создано на хакатоне, 28 октября – 4 ноября 2026"
     },
     {
       "kind": "bullets",
@@ -121,7 +121,7 @@
       "seconds": 6,
       "title": "Medina",
       "subtitle": "github.com/marikpro-sudo/medina-order-assistant",
-      "footer": "Собрано с Muse Code и Claude Code · все данные синтетические"
+      "footer": "Создано на хакатоне 28.10–04.11.2026 с Muse Code и Claude Code · работает на Muse Spark · данные синтетические"
     }
   ]
 }

@@ -7,7 +7,7 @@
       "seconds": 5,
       "title": "Medina",
       "subtitle": "AI order assistant for a pharmaceutical distributor's B2B portal",
-      "footer": "Meta Global AI Developer Hackathon · runs on Muse Spark"
+      "footer": "Meta Global AI Developer Hackathon · everything shown was built during the hackathon, Oct 28 – Nov 4, 2026"
     },
     {
       "kind": "bullets",
@@ -121,7 +121,7 @@
       "seconds": 6,
       "title": "Medina",
       "subtitle": "github.com/marikpro-sudo/medina-order-assistant",
-      "footer": "Built with Muse Code and Claude Code · all data is synthetic"
+      "footer": "Built during the hackathon (Oct 28 – Nov 4, 2026) with Muse Code and Claude Code · runs on Muse Spark · synthetic data"
     }
   ]
 }
