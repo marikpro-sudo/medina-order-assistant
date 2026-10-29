@@ -85,9 +85,14 @@ LIMIT_REPLIES = {
     "budget": {"ru": "Демо-лимит запросов к модели на сегодня исчерпан. Посмотрите видео-демо или запустите проект локально.",
                "kk": "Модельге сұраныстардың демо-лимиті таусылды. Видео-демоны қараңыз немесе жобаны жергілікті іске қосыңыз.",
                "en": "The demo's model budget is used up. Please watch the demo video or run the project locally."},
-    "model": {"ru": "Модель сейчас недоступна, попробуйте позже.",
-              "kk": "Модель қазір қолжетімсіз, кейінірек қайталап көріңіз.",
-              "en": "The model is unavailable right now, please try again later."},
+    "model": {"ru": "Живые запросы к модели с этого хостинга сейчас недоступны: это известная проблема Meta Model API, "
+                    "Meta её расследует. Сценарии из карточек-примеров работают — нажмите ↺ «Новый разговор» и выберите "
+                    "карточку. Или запустите проект локально по инструкции в README.",
+              "kk": "Осы хостингтен модельге тікелей сұраныстар қазір қолжетімсіз: бұл Meta Model API-дің белгілі мәселесі. "
+                    "Мысал-карточкалар жұмыс істейді — ↺ «Жаңа сөйлесу» батырмасын басып, карточканы таңдаңыз.",
+              "en": "Live model calls from this host are unavailable right now — a known Meta Model API issue that Meta is "
+                    "investigating. The example cards work: press ↺ “New chat” and pick a card. Or run the project locally "
+                    "(see the README)."},
     "rate": {"ru": "Слишком много сообщений за час с одного адреса. Попробуйте чуть позже.",
              "kk": "Бір мекенжайдан сағатына хабарлама тым көп. Кейінірек қайталап көріңіз.",
              "en": "Too many messages from one address this hour. Please try again a bit later."},
@@ -127,6 +132,15 @@ def _log_available_models() -> None:
 _diag_cache: dict = {}
 
 
+def _request_id(e: Exception) -> str | None:
+    """Model API request ID of a failed call, for support tickets (never the key)."""
+    rid = getattr(e, "request_id", None)
+    resp = getattr(e, "response", None)
+    if not rid and resp is not None:
+        rid = resp.headers.get("x-request-id") or resp.headers.get("request-id")
+    return rid
+
+
 @app.get("/api/diag")
 def diag():
     """Deployment diagnostics: models visible to the key and a one-token probe per candidate (cached 10 min)."""
@@ -148,7 +162,8 @@ def diag():
                                                 max_completion_tokens=16, reasoning_effort="minimal")
             probes[model] = "ok"
         except Exception as e:
-            probes[model] = f"{type(e).__name__} {getattr(e, 'status_code', '')}: {str(e)[:120]}"
+            probes[model] = {"error": f"{type(e).__name__} {getattr(e, 'status_code', '')}: {str(e)[:120]}",
+                             "request_id": _request_id(e), "at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
     result["probes"] = probes
     _diag_cache.update(at=time.time(), result=result)
     return result
@@ -193,7 +208,7 @@ def chat(
             del agent.messages[history_len:]
             status = getattr(e, "status_code", None)
             detail = f"{type(e).__name__}{f' {status}' if status else ''}"
-            log.error("model call failed: %s: %s", detail, str(e)[:500])
+            log.error("model call failed: %s request_id=%s: %s", detail, _request_id(e), str(e)[:500])
             return {"session_id": session_id, "files": [], "order": None,
                     "reply": f"{LIMIT_REPLIES['model'][lang_key]} ({detail})"}
         files = [
