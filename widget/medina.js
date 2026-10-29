@@ -74,8 +74,47 @@ const STR = {
     retry: 'Қайталау',
     too_big: 'Файл 10 МБ-тан үлкен',
     disclaimer: 'Medina медициналық кеңес бермейді. Тапсырысты әрқашан өзіңіз растайсыз.'
+  },
+  en: {
+    subtitle: 'Order assistant',
+    greeting: 'Hello! I\'m Medina — I\'ll help you put an order together',
+    intro: 'Write the way you like: a list, with typos, in Russian, Kazakh or English.',
+    card_list: 'Paste a list — I\'ll build the order',
+    card_upload: 'Upload a photo or Excel of an order',
+    card_analogs: 'Out of stock? I\'ll find analogs',
+    card_season: 'What to reorder for the cold season?',
+    card_check: 'Check my file before upload',
+    ex_list: 'Build an order: nurafen 200 tab 10 packs, omez 20 - 5, akvadetrim 10, paracetamol suppositories 250 №10 20 pcs, amoksiklav 875 5 packs',
+    ex_analogs: 'Paracetamol suppositories 250 mg №10 are out of stock — find analogs',
+    ex_season: 'What should I reorder for the cold season?',
+    ex_check: 'Check this file before I upload it to the portal',
+    ex_photo: 'Build an order from this photo',
+    placeholder: 'Type an order or a question…',
+    typing: 'Medina is typing…',
+    download: 'Download file for Order upload',
+    edit: 'Edit',
+    explain: 'Explain replacements',
+    ask_file: 'Build the upload file',
+    ask_explain: 'Explain the replacements',
+    edit_prefix: 'Change:',
+    new_chat: 'New chat',
+    expand: 'Expand',
+    restore: 'Shrink',
+    minimize: 'Minimize',
+    close: 'Close',
+    open: 'Open Medina',
+    continue: 'Medina · continue',
+    attach: 'Attach file',
+    send: 'Send',
+    error: 'Could not get a reply.',
+    retry: 'Retry',
+    too_big: 'The file is larger than 10 MB',
+    disclaimer: 'Medina gives no medical advice. You always confirm the order.'
   }
 };
+
+// Accessible name for the language toggle button, per current language.
+const LANG_NAMES = { ru: 'Язык', kk: 'Тіл', en: 'Language' };
 
 const MAX_BYTES = 10 * 1024 * 1024;
 const TIMEOUT_MS = 180000;
@@ -107,7 +146,7 @@ function readConfig() {
     customer: get('customer'),
     token: get('token'), // signed by the portal module in production; replaces customer/point
     point: get('point'),
-    lang: get('lang') === 'kk' ? 'kk' : 'ru',
+    lang: (() => { const l = get('lang'); return l === 'kk' || l === 'en' ? l : 'ru'; })(),
     color: get('color') || '#0E7C66'
   };
 }
@@ -265,7 +304,7 @@ function loadState() {
     const raw = localStorage.getItem(storeKey());
     if (!raw) return;
     const d = JSON.parse(raw);
-    if (d.lang === 'ru' || d.lang === 'kk') lang = d.lang;
+    if (d.lang === 'ru' || d.lang === 'kk' || d.lang === 'en') lang = d.lang;
     if (d.state === 'open' || d.state === 'minimized') state = d.state;
     wide = !!d.wide;
     unread = !!d.unread;
@@ -558,7 +597,9 @@ function setTexts() {
   sendBtn.setAttribute('title', t('send'));
   clipBtn.setAttribute('aria-label', t('attach'));
   clipBtn.setAttribute('title', t('attach'));
-  langBtn.textContent = lang === 'ru' ? 'KZ' : 'RU';
+  langBtn.textContent = lang === 'ru' ? 'KZ' : lang === 'kk' ? 'EN' : 'RU';
+  langBtn.setAttribute('aria-label', LANG_NAMES[lang] || LANG_NAMES.ru);
+  langBtn.setAttribute('title', LANG_NAMES[lang] || LANG_NAMES.ru);
   renderAll();
 }
 
@@ -691,7 +732,7 @@ function buildDom(shadow) {
 
   langBtn = el('button', 'm-ib', 'KZ');
   langBtn.addEventListener('click', () => {
-    lang = lang === 'ru' ? 'kk' : 'ru';
+    lang = lang === 'ru' ? 'kk' : lang === 'kk' ? 'en' : 'ru';
     head.querySelector('.m-sub').textContent = t('subtitle');
     setTexts();
     saveState();
@@ -787,7 +828,7 @@ function api() {
     send: (text) => doSend(text),
     // Host page hands over a file, e.g. one its own upload just rejected.
     sendFile: (file, text) => { openPanel(); doSend(text || '', file); },
-    setLang: (l) => { if (l === 'ru' || l === 'kk') { lang = l; setTexts(); saveState(); } },
+    setLang: (l) => { if (l === 'ru' || l === 'kk' || l === 'en') { lang = l; setTexts(); saveState(); } else { lang = 'ru'; setTexts(); saveState(); } },
     reset: resetChat
   };
 }

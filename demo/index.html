@@ -3,58 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ФармаОпт B2B · демо</title>
+<title data-i18n="page_title">ФармаОпт B2B · демо</title>
 <link rel="stylesheet" href="demo.css">
 </head>
 <body>
-<div class="demo-banner">Демо-стенд Medina. Портал-макет, все данные синтетические.</div>
+<div class="demo-banner" data-i18n="banner">Демо-стенд Medina. Портал-макет, все данные синтетические.</div>
 <header class="topbar">
-  <div class="logo">ФармаОпт <span>B2B</span></div>
+  <div class="logo" data-i18n="logo">ФармаОпт <span>B2B</span></div>
   <label class="customer">
-    <span>Клиент</span>
+    <span data-i18n="customer_label">Клиент</span>
     <select id="customer"></select>
   </label>
   <div id="debt" class="debt"></div>
-  <button id="cart-btn" class="cart-btn" type="button">Корзина <b id="cart-count">0</b></button>
+  <button id="cart-btn" class="cart-btn" type="button"><span data-i18n="cart_btn">Корзина</span> <b id="cart-count">0</b></button>
 </header>
 
 <nav class="tabs">
-  <button data-tab="catalog" class="active" type="button">Каталог</button>
-  <button data-tab="cart" type="button">Корзина</button>
-  <button data-tab="upload" type="button">Загрузка заказа</button>
+  <button data-tab="catalog" class="active" type="button" data-i18n="tab_catalog">Каталог</button>
+  <button data-tab="cart" type="button" data-i18n="tab_cart">Корзина</button>
+  <button data-tab="upload" type="button" data-i18n="tab_upload">Загрузка заказа</button>
 </nav>
 
 <main>
   <section id="tab-catalog" class="tab active">
     <form id="search-form" class="search">
-      <input id="q" type="search" placeholder="Поиск по названию, МНН или штрихкоду" autocomplete="off">
-      <button type="submit">Найти</button>
+      <input id="q" type="search" placeholder="Поиск по названию, МНН или штрихкоду" autocomplete="off" data-i18n-placeholder="search_ph">
+      <button type="submit" data-i18n="search_btn">Найти</button>
     </form>
     <div id="catalog-info" class="muted"></div>
     <table class="grid">
-      <thead><tr><th>Товар</th><th>Производитель</th><th>Серия</th><th>Годен до</th><th>Остаток</th><th>Цена, ₸</th><th>Кол-во</th><th></th></tr></thead>
+      <thead><tr><th data-i18n="th_product">Товар</th><th data-i18n="th_manufacturer">Производитель</th><th data-i18n="th_batch">Серия</th><th data-i18n="th_expiry">Годен до</th><th data-i18n="th_stock">Остаток</th><th data-i18n="th_price">Цена, ₸</th><th data-i18n="th_qty">Кол-во</th><th></th></tr></thead>
       <tbody id="catalog"></tbody>
     </table>
   </section>
 
   <section id="tab-cart" class="tab">
-    <h2>Корзина</h2>
+    <h2 data-i18n="cart_title">Корзина</h2>
     <table class="grid">
-      <thead><tr><th>Товар</th><th>Код товара</th><th>Кол-во</th><th></th></tr></thead>
+      <thead><tr><th data-i18n="cart_th_product">Товар</th><th data-i18n="cart_th_code">Код товара</th><th data-i18n="cart_th_qty">Кол-во</th><th></th></tr></thead>
       <tbody id="cart"></tbody>
     </table>
     <div class="cart-actions">
-      <button id="cart-clear" type="button" class="secondary">Очистить</button>
-      <button type="button" disabled title="В демо заказ не оформляется">Оформить заказ</button>
+      <button id="cart-clear" type="button" class="secondary" data-i18n="cart_clear">Очистить</button>
+      <button type="button" disabled title="В демо заказ не оформляется" data-i18n="cart_place" data-i18n-title="cart_place_title">Оформить заказ</button>
     </div>
   </section>
 
   <section id="tab-upload" class="tab">
-    <h2>Загрузка заказа (Order upload)</h2>
-    <p class="muted">Файл .xls или .csv строго из трёх колонок: <b>Штрихкод | Код товара | Количество</b>, все значения — текстом.</p>
+    <h2 data-i18n="upload_title">Загрузка заказа (Order upload)</h2>
+    <p class="muted" data-i18n="upload_desc">Файл .xls или .csv строго из трёх колонок: <b>Штрихкод | Код товара | Количество</b>, все значения — текстом.</p>
     <form id="upload-form" class="upload">
       <input id="upload-file" type="file" accept=".xls,.xlsx,.csv">
-      <button type="submit">Загрузить</button>
+      <button type="submit" data-i18n="upload_btn">Загрузить</button>
     </form>
     <div id="upload-result"></div>
   </section>

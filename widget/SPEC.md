@@ -12,7 +12,7 @@ Embedded with one line:
 | `data-api` | origin of the script URL | backend base URL |
 | `data-customer` | required | customer id from the portal session |
 | `data-point` | empty | delivery point id (optional, sent to backend) |
-| `data-lang` | `ru` | `ru` or `kk` (initial UI language) |
+| `data-lang` | `ru` | `ru`, `kk` or `en` (initial UI language; unknown values fall back to `ru`) |
 | `data-color` | `#0E7C66` | primary color |
 
 The script also exposes `window.Medina = { open(), close(), send(text), setLang(lang), reset() }`.
@@ -36,7 +36,7 @@ The script also exposes `window.Medina = { open(), close(), send(text), setLang(
    The launcher is hidden while minimized.
 
 Header (primary background, white text): circle avatar with letter "M", title "Medina", subtitle (i18n `subtitle`),
-then icon buttons: language toggle (`RU`/`KZ` text button), new chat (↺), expand/restore (⤢ / ⤡), minimize (—), close (×).
+then icon buttons: language toggle (cycles ru → kk → en → ru; shows the NEXT language code: `KZ` when ru, `EN` when kk, `RU` when en; `aria-label`/`title`: ru "Язык", kk "Тіл", en "Language"), new chat (↺), expand/restore (⤢ / ⤡), minimize (—), close (×).
 All with `aria-label` and `title`. Esc key minimizes.
 
 Body: scrollable message list. Footer: attachment chip row (when a file is selected), then input row:
@@ -109,39 +109,40 @@ the widget works without storage. Restore state on page load (open panel stays o
 
 ## i18n strings
 
-| key | ru | kk |
-|---|---|---|
-| subtitle | Ассистент заказа | Тапсырыс көмекшісі |
-| greeting | Здравствуйте! Я Medina — помогу собрать заказ | Сәлеметсіз бе! Мен Medina — тапсырыс жинауға көмектесемін |
-| intro | Пишите как удобно: списком, с опечатками, по-русски или по-казахски. | Өзіңізге ыңғайлы жазыңыз: тізіммен, қатемен, орысша немесе қазақша. |
-| card_list | Вставь список — соберу заказ | Тізімді қойыңыз — тапсырыс жинаймын |
-| card_upload | Загрузи фото или Excel заказа | Тапсырыстың фотосын немесе Excel файлын жүктеңіз |
-| card_analogs | Чего нет в наличии? Подберу аналоги | Қоймада жоқ па? Аналогын табамын |
-| card_season | Что дозаказать к сезону простуд? | Суық тию маусымына не тапсырыс беру керек? |
-| card_check | Проверь мой файл перед загрузкой | Жүктеу алдында файлымды тексеріңіз |
-| ex_list | Собери заказ: нурафен 200 таб 10 уп, омез 20 - 5, аквадетрим 10, парацетамол свечи 250 №10 20 шт, амоксиклав 875 5 уп | Тапсырыс жинаңыз: нурафен 200 таб 10 қорап, омез 20 - 5, аквадетрим 10, парацетамол шам 250 №10 20 дана |
-| ex_analogs | Парацетамол свечи 250 мг №10 нет в наличии — подбери аналоги | Парацетамол шам 250 мг №10 қоймада жоқ — аналогын табыңыз |
-| ex_season | Что дозаказать к сезону простуд? | Суық тию маусымына не тапсырыс беру керек? |
-| ex_check | Проверь этот файл перед загрузкой на портал | Порталға жүктемес бұрын осы файлды тексеріңіз |
-| ex_photo | Собери заказ по фото | Фото бойынша тапсырыс жинаңыз |
-| placeholder | Напишите заказ или вопрос… | Тапсырысты немесе сұрақты жазыңыз… |
-| typing | Medina печатает… | Medina жазып жатыр… |
-| download | Скачать файл для Order upload | Order upload үшін файлды жүктеу |
-| edit | Изменить | Өзгерту |
-| explain | Пояснить замены | Ауыстыруларды түсіндіру |
-| ask_file | Сформируй файл для загрузки | Жүктеуге арналған файлды жасаңыз |
-| ask_explain | Поясни замены | Ауыстыруларды түсіндіріңіз |
-| edit_prefix | Изменить: | Өзгерту: |
-| new_chat | Новый разговор | Жаңа сөйлесу |
-| expand | Развернуть | Кеңейту |
-| restore | Уменьшить | Кішірейту |
-| minimize | Свернуть | Жию |
-| close | Закрыть | Жабу |
-| open | Открыть Medina | Medina-ны ашу |
-| continue | Medina · продолжить | Medina · жалғастыру |
-| attach | Прикрепить файл | Файл тіркеу |
-| send | Отправить | Жіберу |
-| error | Не удалось получить ответ. | Жауап алу мүмкін болмады. |
-| retry | Повторить | Қайталау |
-| too_big | Файл больше 10 МБ | Файл 10 МБ-тан үлкен |
-| disclaimer | Medina не даёт медицинских советов. Заказ всегда подтверждаете вы. | Medina медициналық кеңес бермейді. Тапсырысты әрқашан өзіңіз растайсыз. |
+| key | ru | kk | en |
+|---|---|---|---|
+
+| subtitle | Ассистент заказа | Тапсырыс көмекшісі | Order assistant |
+| greeting | Здравствуйте! Я Medina — помогу собрать заказ | Сәлеметсіз бе! Мен Medina — тапсырыс жинауға көмектесемін | Hello! I'm Medina — I'll help you put an order together |
+| intro | Пишите как удобно: списком, с опечатками, по-русски или по-казахски. | Өзіңізге ыңғайлы жазыңыз: тізіммен, қатемен, орысша немесе қазақша. | Write the way you like: a list, with typos, in Russian, Kazakh or English. |
+| card_list | Вставь список — соберу заказ | Тізімді қойыңыз — тапсырыс жинаймын | Paste a list — I'll build the order |
+| card_upload | Загрузи фото или Excel заказа | Тапсырыстың фотосын немесе Excel файлын жүктеңіз | Upload a photo or Excel of an order |
+| card_analogs | Чего нет в наличии? Подберу аналоги | Қоймада жоқ па? Аналогын табамын | Out of stock? I'll find analogs |
+| card_season | Что дозаказать к сезону простуд? | Суық тию маусымына не тапсырыс беру керек? | What to reorder for the cold season? |
+| card_check | Проверь мой файл перед загрузкой | Жүктеу алдында файлымды тексеріңіз | Check my file before upload |
+| ex_list | Собери заказ: нурафен 200 таб 10 уп, омез 20 - 5, аквадетрим 10, парацетамол свечи 250 №10 20 шт, амоксиклав 875 5 уп | Тапсырыс жинаңыз: нурафен 200 таб 10 қорап, омез 20 - 5, аквадетрим 10, парацетамол шам 250 №10 20 дана | Build an order: nurafen 200 tab 10 packs, omez 20 - 5, akvadetrim 10, paracetamol suppositories 250 №10 20 pcs, amoksiklav 875 5 packs |
+| ex_analogs | Парацетамол свечи 250 мг №10 нет в наличии — подбери аналоги | Парацетамол шам 250 мг №10 қоймада жоқ — аналогын табыңыз | Paracetamol suppositories 250 mg №10 are out of stock — find analogs |
+| ex_season | Что дозаказать к сезону простуд? | Суық тию маусымына не тапсырыс беру керек? | What should I reorder for the cold season? |
+| ex_check | Проверь этот файл перед загрузкой на портал | Порталға жүктемес бұрын осы файлды тексеріңіз | Check this file before I upload it to the portal |
+| ex_photo | Собери заказ по фото | Фото бойынша тапсырыс жинаңыз | Build an order from this photo |
+| placeholder | Напишите заказ или вопрос… | Тапсырысты немесе сұрақты жазыңыз… | Type an order or a question… |
+| typing | Medina печатает… | Medina жазып жатыр… | Medina is typing… |
+| download | Скачать файл для Order upload | Order upload үшін файлды жүктеу | Download file for Order upload |
+| edit | Изменить | Өзгерту | Edit |
+| explain | Пояснить замены | Ауыстыруларды түсіндіру | Explain replacements |
+| ask_file | Сформируй файл для загрузки | Жүктеуге арналған файлды жасаңыз | Build the upload file |
+| ask_explain | Поясни замены | Ауыстыруларды түсіндіріңіз | Explain the replacements |
+| edit_prefix | Изменить: | Өзгерту: | Change: |
+| new_chat | Новый разговор | Жаңа сөйлесу | New chat |
+| expand | Развернуть | Кеңейту | Expand |
+| restore | Уменьшить | Кішірейту | Shrink |
+| minimize | Свернуть | Жию | Minimize |
+| close | Закрыть | Жабу | Close |
+| open | Открыть Medina | Medina-ны ашу | Open Medina |
+| continue | Medina · продолжить | Medina · жалғастыру | Medina · continue |
+| attach | Прикрепить файл | Файл тіркеу | Attach file |
+| send | Отправить | Жіберу | Send |
+| error | Не удалось получить ответ. | Жауап алу мүмкін болмады. | Could not get a reply. |
+| retry | Повторить | Қайталау | Retry |
+| too_big | Файл больше 10 МБ | Файл 10 МБ-тан үлкен | The file is larger than 10 MB |
+| disclaimer | Medina не даёт медицинских советов. Заказ всегда подтверждаете вы. | Medina медициналық кеңес бермейді. Тапсырысты әрқашан өзіңіз растайсыз. | Medina gives no medical advice. You always confirm the order. |
