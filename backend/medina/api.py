@@ -123,6 +123,32 @@ def _log_available_models() -> None:
         log.warning("model list unavailable: %s: %s", type(e).__name__, str(e)[:300])
 
 
+_diag_cache: dict = {}
+
+
+@app.get("/api/diag")
+def diag():
+    """Deployment diagnostics: models visible to the key and a one-token probe per candidate (cached 10 min)."""
+    if _diag_cache.get("at", 0) > time.time() - 600:
+        return _diag_cache["result"]
+    result: dict = {"configured_model": _llm.model, "key_set": bool(os.environ.get("META_API_KEY"))}
+    try:
+        result["listed"] = sorted(m.id for m in _llm.client.models.list())
+    except Exception as e:
+        result["listed"] = f"{type(e).__name__}: {str(e)[:200]}"
+    probes = {}
+    for model in dict.fromkeys([_llm.model, "muse-spark-1.3", "muse-spark-1.2", "muse-spark-1.3-contributor"]):
+        try:
+            _llm.client.chat.completions.create(model=model, messages=[{"role": "user", "content": "ok"}],
+                                                max_completion_tokens=16, reasoning_effort="minimal")
+            probes[model] = "ok"
+        except Exception as e:
+            probes[model] = f"{type(e).__name__} {getattr(e, 'status_code', '')}: {str(e)[:120]}"
+    result["probes"] = probes
+    _diag_cache.update(at=time.time(), result=result)
+    return result
+
+
 @app.get("/api/health")
 def health():
     """Cheap liveness check for the host and the keep-alive job: no model call."""
