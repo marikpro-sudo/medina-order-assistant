@@ -1,0 +1,24 @@
+# Keeps the free-tier demo awake while judges review it (free Render services sleep after 15 min idle).
+# Pings a cheap health endpoint (no model call). Set the repository variable DEMO_URL to the demo's base URL.
+name: Keep demo awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping demo
+        env:
+          DEMO_URL: ${{ vars.DEMO_URL }}
+        run: |
+          # Judging and community vote end on 2026-11-16; stop pinging afterwards.
+          if [ "$(date -u +%Y%m%d)" -gt 20261117 ]; then echo "judging is over"; exit 0; fi
+          if [ -z "$DEMO_URL" ]; then echo "DEMO_URL is not set"; exit 0; fi
+          # A sleeping service needs up to ~1 min to wake: retry for a while before failing.
+          curl --fail --silent --show-error --retry 6 --retry-delay 15 --retry-all-errors --max-time 90 \
+            "$DEMO_URL/api/health"

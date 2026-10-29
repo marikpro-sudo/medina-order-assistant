@@ -24,6 +24,10 @@ PRICES = {
 ROOT = Path(__file__).resolve().parents[2]
 
 
+class BudgetExceeded(RuntimeError):
+    """The deployment's model spend cap (MEDINA_MAX_SPEND_USD) is used up."""
+
+
 class LLM:
     def __init__(self, model: str | None = None, reasoning_effort: str = "low",
                  cache_dir: Path | None = None, use_cache: bool = True):
@@ -53,6 +57,11 @@ class LLM:
         cache_file = self.cache_dir / f"{key}.json"
         if self.use_cache and cache_file.exists():
             return json.loads(cache_file.read_text(encoding="utf-8"))["message"]
+
+        # Public demo guard: cached answers stay free, new model calls stop at the cap.
+        cap = float(os.environ.get("MEDINA_MAX_SPEND_USD", "0") or 0)
+        if cap and total_spend(self.usage_log) >= cap:
+            raise BudgetExceeded(f"spend cap ${cap:.2f} reached")
 
         started = time.time()
         resp = self.client.chat.completions.create(**payload)

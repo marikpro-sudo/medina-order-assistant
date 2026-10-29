@@ -1,0 +1,16 @@
+# Render Blueprint: New -> Blueprint -> pick this repository. Set META_API_KEY when asked.
+services:
+  - type: web
+    name: medina-demo
+    runtime: docker
+    plan: free
+    region: frankfurt
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: META_API_KEY
+        sync: false            # secret: entered in the Render dashboard, never committed
+      - key: MEDINA_MAX_SPEND_USD
+        value: "10"            # new model calls stop at this spend; cached demo answers stay free
+      - key: MEDINA_RATE_PER_HOUR
+        value: "20"            # messages per client IP per hour

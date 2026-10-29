@@ -4,13 +4,15 @@ In production the customer id comes from the portal session (signed by the porta
 not from a free form field; see integration/prestashop/.
 """
 
+import os
 import re
 import threading
+import time
 import uuid
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict, deque
 from pathlib import Path
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -18,7 +20,7 @@ from pydantic import BaseModel
 
 from data_access.synthetic import default_source
 from medina.agent import UI_LANGUAGES, Agent
-from medina.llm import LLM, ROOT
+from medina.llm import LLM, ROOT, BudgetExceeded
 from medina.inputs import UnsupportedFile, build_user_content
 from medina.parsers.spreadsheet import read_rows
 
@@ -70,8 +72,49 @@ def _user_content(agent: Agent, message: str, file: UploadFile | None, data: byt
         raise HTTPException(415, "unsupported file type")
 
 
+MAX_MESSAGE = 4000
+RATE_PER_HOUR = int(os.environ.get("MEDINA_RATE_PER_HOUR", "0") or 0)  # 0 = no limit (local dev)
+_hits: dict[str, deque] = defaultdict(deque)
+_hits_lock = threading.Lock()
+
+LIMIT_REPLIES = {
+    "budget": {"ru": "Демо-лимит запросов к модели на сегодня исчерпан. Посмотрите видео-демо или запустите проект локально.",
+               "kk": "Модельге сұраныстардың демо-лимиті таусылды. Видео-демоны қараңыз немесе жобаны жергілікті іске қосыңыз.",
+               "en": "The demo's model budget is used up. Please watch the demo video or run the project locally."},
+    "rate": {"ru": "Слишком много сообщений за час с одного адреса. Попробуйте чуть позже.",
+             "kk": "Бір мекенжайдан сағатына хабарлама тым көп. Кейінірек қайталап көріңіз.",
+             "en": "Too many messages from one address this hour. Please try again a bit later."},
+}
+
+
+def _client_ip(request: Request) -> str:
+    fwd = request.headers.get("x-forwarded-for", "")
+    return fwd.split(",")[0].strip() or (request.client.host if request.client else "?")
+
+
+def _rate_limited(ip: str) -> bool:
+    if not RATE_PER_HOUR:
+        return False
+    now = time.time()
+    with _hits_lock:
+        q = _hits[ip]
+        while q and now - q[0] > 3600:
+            q.popleft()
+        if len(q) >= RATE_PER_HOUR:
+            return True
+        q.append(now)
+        return False
+
+
+@app.get("/api/health")
+def health():
+    """Cheap liveness check for the host and the keep-alive job: no model call."""
+    return {"ok": True}
+
+
 @app.post("/api/chat")
 def chat(
+    request: Request,
     customer_id: str = Form(...),
     message: str = Form(""),
     session_id: str = Form(""),
@@ -84,10 +127,20 @@ def chat(
         raise HTTPException(413, "file too large")
     if not message.strip() and file is None:
         raise HTTPException(400, "empty message")
+    if len(message) > MAX_MESSAGE:
+        raise HTTPException(413, "message too long")
+    lang_key = lang if lang in ("ru", "kk", "en") else "ru"
+    if _rate_limited(_client_ip(request)):
+        return {"session_id": session_id, "reply": LIMIT_REPLIES["rate"][lang_key], "files": [], "order": None}
     session_id, agent, lock = _get_session(session_id, customer_id, lang)
     with lock:  # one turn at a time per conversation
         content = _with_language_hint(_user_content(agent, message.strip(), file, data), lang)
-        reply = agent.ask(content)
+        history_len = len(agent.messages)
+        try:
+            reply = agent.ask(content)
+        except BudgetExceeded:
+            del agent.messages[history_len:]  # roll back the unfinished turn so the session stays valid
+            return {"session_id": session_id, "reply": LIMIT_REPLIES["budget"][lang_key], "files": [], "order": None}
         files = [
             {"file_id": t["result"]["file_id"], "filename": t["result"]["filename"],
              "url": f"/api/files/{t['result']['file_id']}"}

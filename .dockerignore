@@ -1,0 +1,12 @@
+.git
+.venv
+.cache
+.env
+.muse
+.claude
+video
+evals
+docs
+scripts
+**/__pycache__
+**/tests
