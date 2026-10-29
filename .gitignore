@@ -6,3 +6,7 @@ __pycache__/
 *.pyc
 .pytest_cache/
 CLAUDE.md
+video/node_modules/
+video/out/
+video/frames/
+video/public/recordings/
