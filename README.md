@@ -9,6 +9,14 @@ rejected row by row. A human always confirms; Medina never places an order or gi
 
 Track: Startup · Theme: *Build for Your World*.
 
+## Demo video (3 min)
+
+[![Medina demo video](https://img.youtube.com/vi/zLYBtnfiVZo/maxresdefault.jpg)](https://youtu.be/zLYBtnfiVZo)
+
+▶ **https://youtu.be/zLYBtnfiVZo** — recorded from the running app on the mock portal ([`demo/`](demo/)) with
+synthetic data; model answers are replayed from the response cache, so waiting time is cut (real answers take
+5–16 s). The video is built from code in [`video/`](video/) (Playwright recording + Remotion).
+
 ## The problem
 
 A distributor with ~7,000 SKUs serves thousands of pharmacies and clinics through a B2B portal. The portal's
