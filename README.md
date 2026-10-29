@@ -139,4 +139,4 @@ Muse commits are tagged `[Muse Code]`, review fixes are separate `fix: … (revi
 ## Built during the hackathon
 
 All code in this repository was written during the Meta Global AI Developer Hackathon,
-starting 2026-10-28. The first commit (`96cd0a4`) is the starting point. All data is synthetic.
+starting 2026-10-28. The first commit (`8753298`) is the starting point. All data is synthetic.
