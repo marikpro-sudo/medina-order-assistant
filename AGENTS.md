@@ -12,7 +12,7 @@ and produces a file in the portal's strict order-upload format. A human always c
   customer names, internal system names, ERP table/field names or credentials. Describe the
   source system only generically ("the distributor's ERP export").
 - Secrets live only in `.env` (git-ignored). See `.env.example`.
-- Code, comments, docs: English. Medina's user-facing replies: Russian or Kazakh (match the user).
+- Code, comments, docs: English. Medina's user-facing replies: Russian, Kazakh or English (match the user).
 - Medina never gives medical advice or treatment recommendations — only product, INN, form,
   strength, availability, expiry, pack multiple.
 - Medina never places an order itself.

@@ -1,0 +1,127 @@
+{
+  "lang": "en",
+  "speedNote": "Model answers are sped up in this video: 5–16 seconds in reality",
+  "intro": [
+    {
+      "kind": "title",
+      "seconds": 5,
+      "title": "Medina",
+      "subtitle": "AI order assistant for a pharmaceutical distributor's B2B portal",
+      "footer": "Meta Global AI Developer Hackathon · runs on Muse Spark"
+    },
+    {
+      "kind": "bullets",
+      "seconds": 11,
+      "title": "The problem",
+      "bullets": [
+        "Pharmacies send orders as messages, photos of handwritten lists and Excel files in their own layout — in Russian and Kazakh, with typos",
+        "The portal accepts only a file with three text columns: barcode | product code | quantity",
+        "One bad row and the whole file is rejected — no row number, no reason"
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "scene": "upload_error",
+      "label": "File check",
+      "holds": [{ "at": "portal_error", "offset": 0, "seconds": 1.5 }, { "at": "reply", "offset": 600, "seconds": 4 }],
+      "subtitles": [
+        { "at": "start", "offset": 0, "seconds": 2.8, "text": "A pharmacy uploads its own file to the portal…" },
+        { "at": "portal_error", "offset": 0, "seconds": 4, "text": "…and gets “File upload error” — no row number, no reason" },
+        { "at": "ask_medina", "offset": 0, "seconds": 2.5, "text": "One click sends the same file to Medina" },
+        { "at": "reply", "offset": 0, "seconds": 6, "text": "Medina checks every row: pack multiple, barcode check digit, text instead of a number, mismatched code, numbers instead of text" },
+        { "at": "reply", "offset": 3500, "seconds": 4.5, "text": "…and says how to fix each row" }
+      ]
+    },
+    {
+      "scene": "order_list",
+      "label": "Order from a message",
+      "holds": [{ "at": "reply", "offset": 600, "seconds": 6 }, { "at": "upload_ok", "offset": 300, "seconds": 1.5 }],
+      "subtitles": [
+        { "at": "start", "offset": 0, "seconds": 2.6, "text": "Medina lives in the corner of the portal — added with one <script> line" },
+        { "at": "welcome", "offset": 0, "seconds": 3, "text": "Cards show what it can do" },
+        { "at": "sent_list", "offset": 0, "seconds": 1.6, "text": "A list with typos, the way pharmacies write it" },
+        { "at": "reply", "offset": 0, "seconds": 4, "text": "Every line is matched to the catalog and checked: stock in the branch, pack multiple, expiry" },
+        { "at": "reply", "offset": 700, "seconds": 4, "text": "Out of stock — a substitute with the same INN, form and strength; quantity recalculated to keep the same number of units" },
+        { "at": "reply", "offset": 1400, "seconds": 3.5, "text": "Overdue debt is flagged before upload, not after" },
+        { "at": "ask_file", "offset": 0, "seconds": 4.5, "text": "A person confirms — Medina builds an .xls in the portal's exact format" },
+        { "at": "downloaded", "offset": 0, "seconds": 4.2, "text": "We upload it through the regular order upload…" },
+        { "at": "upload_ok", "offset": 0, "seconds": 3.5, "text": "…and the portal accepts it. The portal places the order — Medina sends nothing" },
+        { "at": "cart", "offset": 0, "seconds": 3.4, "text": "Items are in the cart" }
+      ]
+    },
+    {
+      "scene": "photo",
+      "label": "Photo of a list",
+      "holds": [{ "at": "reply", "offset": 600, "seconds": 4 }],
+      "subtitles": [
+        { "at": "start", "offset": 0, "seconds": 3.5, "text": "A photo of a handwritten list — via the paperclip" },
+        { "at": "reply", "offset": 0, "seconds": 5, "text": "Muse Spark reads the handwriting, then the same catalog checks run" },
+        { "at": "reply", "offset": 2500, "seconds": 4.5, "text": "Not in the catalog? Marked “not recognized” — nothing invented" }
+      ]
+    },
+    {
+      "scene": "kazakh",
+      "label": "Қазақша",
+      "holds": [{ "at": "reply", "offset": 600, "seconds": 3 }],
+      "subtitles": [
+        { "at": "start", "offset": 0, "seconds": 2.5, "text": "Interface and answers in English, Russian and Kazakh" },
+        { "at": "kz_ui", "offset": 0, "seconds": 4, "text": "Switch to Kazakh and type an order…" },
+        { "at": "reply", "offset": 0, "seconds": 6, "text": "…the answer comes in Kazakh: same table, pack multiples, stock and the overdue-debt warning" }
+      ]
+    },
+    {
+      "scene": "reorder",
+      "label": "Seasonal reorder",
+      "holds": [{ "at": "reply", "offset": 600, "seconds": 4 }],
+      "subtitles": [
+        { "at": "start", "offset": 0, "seconds": 3, "text": "“What should I reorder for the cold season?”" },
+        { "at": "reply", "offset": 0, "seconds": 5, "text": "Suggestions from this pharmacy's history and season demand across all customers — with a reason for each item" },
+        { "at": "reply", "offset": 2500, "seconds": 4.5, "text": "Items missing in the branch come with an in-stock analog" }
+      ]
+    },
+    {
+      "scene": "analogs",
+      "label": "Analogs",
+      "holds": [{ "at": "reply", "offset": 600, "seconds": 3.5 }],
+      "subtitles": [
+        { "at": "start", "offset": 0, "seconds": 2.5, "text": "In the catalog: “Temporarily out of stock”" },
+        { "at": "sent", "offset": 0, "seconds": 2.5, "text": "“Show analogs” opens Medina" },
+        { "at": "reply", "offset": 0, "seconds": 6.5, "text": "Only items in stock: same INN, form and strength first, then the longest shelf life" }
+      ]
+    }
+  ],
+  "outro": [
+    {
+      "kind": "bullets",
+      "seconds": 12,
+      "title": "How it works",
+      "bullets": [
+        "Muse Spark via the Meta Model API with tool calling: catalog search, batches and stock, analogs, line checks, Excel and photo reading, file validation, reorder",
+        "Exact checks are plain, tested code; the model reads the mess and explains",
+        "Embeds into the existing PrestaShop portal with one <script> line",
+        "Medina never places orders and gives no medical advice — a person always confirms"
+      ]
+    },
+    {
+      "kind": "metrics",
+      "seconds": 12,
+      "title": "Tested on 100 messy orders (744 lines)",
+      "metrics": [
+        { "value": "95%", "label": "lines matched to the catalog", "note": "portal search — 30%" },
+        { "value": "98.9%", "label": "same INN, form and strength", "note": "" },
+        { "value": "98%", "label": "missing items with an in-stock analog", "note": "" },
+        { "value": "97%", "label": "quantities fixed to the pack multiple", "note": "" },
+        { "value": "100%", "label": "file errors found with the row number", "note": "portal — 0%" },
+        { "value": "~16 s", "label": "per order, about $0.04", "note": "by hand, 30 lines — 15–20 min" }
+      ]
+    },
+    {
+      "kind": "title",
+      "seconds": 6,
+      "title": "Medina",
+      "subtitle": "github.com/marikpro-sudo/medina-order-assistant",
+      "footer": "Built with Muse Code and Claude Code · all data is synthetic"
+    }
+  ]
+}

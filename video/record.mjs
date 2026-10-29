@@ -11,7 +11,13 @@ const BASE = process.env.DEMO_URL || "http://localhost:8001";
 const CUSTOMER = "C100004";
 const WARM = process.argv.includes("--warm");
 const ONLY = process.argv.find((a) => a.startsWith("--only="))?.slice(7);
-const OUT = path.resolve("public/recordings");
+const LANG = process.argv.find((a) => a.startsWith("--lang="))?.slice(7) || "ru";
+const OUT = path.resolve(LANG === "ru" ? "public/recordings" : `public/recordings/${LANG}`);
+// Widget labels the script clicks, per UI language.
+const L = {
+  ru: { open: "Открыть Medina", minimize: "Свернуть", attach: "Прикрепить файл", send: "Отправить", download: "Скачать файл для Order upload" },
+  en: { open: "Open Medina", minimize: "Minimize", attach: "Attach file", send: "Send", download: "Download file for Order upload" },
+}[LANG];
 const ASSETS = path.resolve("assets");
 const VIEW = { width: 1440, height: 810 };
 const SIZE = VIEW; // Playwright frames are in CSS pixels; Remotion upscales to 1080p
@@ -42,7 +48,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, WARM ? Math.min(ms, 200) 
 async function scene(browser, name, fn) {
   if (ONLY && ONLY !== name) return;
   const context = await browser.newContext({
-    viewport: VIEW, deviceScaleFactor: 1, acceptDownloads: true, locale: "ru-RU",
+    viewport: VIEW, deviceScaleFactor: 1, acceptDownloads: true, locale: LANG === "en" ? "en-US" : "ru-RU",
     ...(WARM ? {} : { recordVideo: { dir: OUT, size: SIZE } }),
   });
   await context.addInitScript(CURSOR);
@@ -78,7 +84,7 @@ async function moveClick(page, locator) {
 }
 
 async function openDemo(page, query = "") {
-  await page.goto(`${BASE}/demo/?customer=${CUSTOMER}${query}`);
+  await page.goto(`${BASE}/demo/?customer=${CUSTOMER}&lang=${LANG}${query}`);
   await page.locator(".m-launch, #medina-root").first().waitFor({ state: "attached" });
   await sleep(1200);
 }
@@ -117,7 +123,7 @@ async function readReply(page, pauseMs = 2500) {
 }
 
 const widgetButton = (page, label) => page.locator(`#medina-root button[aria-label="${label}"]`).first();
-const launcher = (page) => page.locator('#medina-root [aria-label="Открыть Medina"]').first();
+const launcher = (page) => page.locator(`#medina-root [aria-label="${L.open}"]`).first();
 
 const browser = await chromium.launch();
 fs.mkdirSync(OUT, { recursive: true });
@@ -158,18 +164,18 @@ await scene(browser, "order_list", async (page, mark) => {
   mark("reply");
   await readReply(page, 3000);
   const n2 = await replies(page);
-  await moveClick(page, page.locator("#medina-root button", { hasText: "Скачать файл для Order upload" }).last());
+  await moveClick(page, page.locator("#medina-root button", { hasText: L.download }).last());
   mark("ask_file");
   await waitReply(page, n2);
   mark("file_ready");
   await sleep(1500);
-  const link = page.locator("#medina-root a", { hasText: "Скачать файл для Order upload" }).last();
+  const link = page.locator("#medina-root a", { hasText: L.download }).last();
   const [download] = await Promise.all([page.waitForEvent("download"), moveClick(page, link)]);
   const file = path.join(OUT, "medina_order_upload.xls");
   await download.saveAs(file);
   mark("downloaded");
   await sleep(1200);
-  await moveClick(page, widgetButton(page, "Свернуть"));
+  await moveClick(page, widgetButton(page, L.minimize));
   await sleep(800);
   await moveClick(page, page.locator('.tabs button[data-tab="upload"]'));
   await page.locator("#upload-file").setInputFiles(file);
@@ -191,11 +197,11 @@ await scene(browser, "photo", async (page, mark) => {
   await sleep(1200);
   mark("start");
   const n = await replies(page);
-  const [chooser] = await Promise.all([page.waitForEvent("filechooser"), moveClick(page, widgetButton(page, "Прикрепить файл"))]);
+  const [chooser] = await Promise.all([page.waitForEvent("filechooser"), moveClick(page, widgetButton(page, L.attach))]);
   await chooser.setFiles(path.join(ASSETS, "spisok_foto.png"));
   mark("attached");
   await sleep(1500);
-  await moveClick(page, widgetButton(page, "Отправить"));
+  await moveClick(page, widgetButton(page, L.send));
   mark("sent");
   await waitReply(page, n);
   mark("reply");
@@ -209,7 +215,13 @@ await scene(browser, "kazakh", async (page, mark) => {
   await moveClick(page, launcher(page));
   await sleep(1000);
   mark("start");
-  await moveClick(page, page.locator("#medina-root button", { hasText: /^KZ$/ }).first());
+  // The toggle cycles ru -> kk -> en; click until the Kazakh UI is on.
+  for (let i = 0; i < 3; i++) {
+    const kk = await page.evaluate(() => document.getElementById("medina-root").shadowRoot.textContent.includes("Тапсырыс көмекшісі"));
+    if (kk) break;
+    await moveClick(page, page.locator("#medina-root button", { hasText: /^(KZ|EN|RU)$/ }).first());
+    await sleep(700);
+  }
   mark("kz_ui");
   await sleep(2500);
   const n = await replies(page);

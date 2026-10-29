@@ -1,6 +1,6 @@
 import React from "react";
 import {AbsoluteFill, Series, interpolate, useCurrentFrame, useVideoConfig} from "remotion";
-import {CONTENT, TIMELINE} from "./Root";
+import {CONTENT, TIMELINES} from "./Root";
 import {sceneLayout} from "./timeline";
 import type {Card, Content} from "./types";
 import type {VideoProps} from "./Root";
@@ -49,7 +49,7 @@ export const Video: React.FC<VideoProps> = ({lang}) => {
           );
         })}
         {content.scenes.map((scene) => {
-          const entry = TIMELINE[scene.scene];
+          const entry = (TIMELINES[lang] ?? TIMELINES.ru)[scene.scene];
           if (!entry) {
             throw new Error(`[video] no timeline entry for scene "${scene.scene}"`);
           }
