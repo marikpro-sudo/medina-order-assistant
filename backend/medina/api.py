@@ -4,6 +4,7 @@ In production the customer id comes from the portal session (signed by the porta
 not from a free form field; see integration/prestashop/.
 """
 
+import hashlib
 import logging
 import os
 import re
@@ -131,7 +132,11 @@ def diag():
     """Deployment diagnostics: models visible to the key and a one-token probe per candidate (cached 10 min)."""
     if _diag_cache.get("at", 0) > time.time() - 600:
         return _diag_cache["result"]
-    result: dict = {"configured_model": _llm.model, "key_set": bool(os.environ.get("META_API_KEY"))}
+    key = os.environ.get("META_API_KEY", "")
+    # A short hash prefix lets two environments compare keys without revealing them.
+    result: dict = {"configured_model": _llm.model, "key_set": bool(key),
+                    "key_fp": hashlib.sha256(key.strip().encode()).hexdigest()[:8] if key else None,
+                    "key_has_whitespace": key != key.strip()}
     try:
         result["listed"] = sorted(m.id for m in _llm.client.models.list())
     except Exception as e:
