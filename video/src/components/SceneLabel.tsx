@@ -7,14 +7,15 @@ export const SceneLabel: React.FC<{label: string}> = ({label}) => {
     <AbsoluteFill style={{justifyContent: "flex-start", alignItems: "flex-start"}}>
       <div
         style={{
-          marginLeft: 32,
-          marginTop: 32,
+          // Sits in the empty left part of the demo banner, clear of the portal logo.
+          marginLeft: 24,
+          marginTop: 4,
           backgroundColor: "#0E7C66",
-          borderRadius: 10,
-          padding: "8px 18px",
+          borderRadius: 8,
+          padding: "3px 14px",
           fontFamily: FONT,
           color: "#fff",
-          fontSize: 28,
+          fontSize: 22,
         }}
       >
         {label}

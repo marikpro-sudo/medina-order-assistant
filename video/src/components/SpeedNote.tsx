@@ -4,17 +4,18 @@ import {FONT} from "./TitleCard";
 
 export const SpeedNote: React.FC<{text: string}> = ({text}) => {
   return (
-    <AbsoluteFill style={{justifyContent: "flex-end", alignItems: "flex-end"}}>
+    // Bottom-left under the subtitles; bottom-right is where the minimized widget sits.
+    <AbsoluteFill style={{justifyContent: "flex-end", alignItems: "flex-start"}}>
       <div
         style={{
-          marginRight: 32,
-          marginBottom: 32,
+          marginLeft: 40,
+          marginBottom: 12,
           backgroundColor: "rgba(0,0,0,0.45)",
           borderRadius: 999,
-          padding: "6px 16px",
+          padding: "4px 14px",
           fontFamily: FONT,
           color: "rgba(255,255,255,0.85)",
-          fontSize: 22,
+          fontSize: 19,
         }}
       >
         {text}

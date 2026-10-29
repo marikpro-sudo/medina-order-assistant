@@ -15,10 +15,11 @@ export const SubtitleBar: React.FC<{text: string; durationInFrames: number}> = (
     }),
   );
   return (
-    <AbsoluteFill style={{justifyContent: "flex-end", alignItems: "center", paddingBottom: 72}}>
+    // Bottom-left, over the portal page: the chat widget on the right stays readable.
+    <AbsoluteFill style={{justifyContent: "flex-end", alignItems: "flex-start", padding: "0 0 56px 40px"}}>
       <div
         style={{
-          maxWidth: 1500,
+          maxWidth: 800,
           backgroundColor: "rgba(0,0,0,0.72)",
           borderRadius: 14,
           padding: "14px 28px",
@@ -29,11 +30,11 @@ export const SubtitleBar: React.FC<{text: string; durationInFrames: number}> = (
         <div
           style={{
             color: "#fff",
-            fontSize: 40,
+            fontSize: 36,
             lineHeight: 1.3,
-            textAlign: "center",
+            textAlign: "left",
             display: "-webkit-box",
-            WebkitLineClamp: 2,
+            WebkitLineClamp: 4,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
           }}
