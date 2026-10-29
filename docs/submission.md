@@ -4,7 +4,7 @@ Ready-to-paste answers for the Cerebral Valley submission form. Adjust lengths t
 
 ## Links
 - Repository (public): https://github.com/marikpro-sudo/medina-order-assistant
-- Demo video (3 min): https://youtu.be/zLYBtnfiVZo
+- Demo video (3 min): https://youtu.be/yqW_9d5NMjA
 
 ## Track and problem statement
 - Track: **Startups**

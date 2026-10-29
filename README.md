@@ -13,9 +13,9 @@ raw input to a validated upload file. Everything here was built during the hacka
 
 ## Demo video (3 min)
 
-[![Medina demo video](https://img.youtube.com/vi/zLYBtnfiVZo/maxresdefault.jpg)](https://youtu.be/zLYBtnfiVZo)
+[![Medina demo video](https://img.youtube.com/vi/yqW_9d5NMjA/maxresdefault.jpg)](https://youtu.be/yqW_9d5NMjA)
 
-▶ **https://youtu.be/zLYBtnfiVZo** — recorded from the running app on the mock portal ([`demo/`](demo/)) with
+▶ **https://youtu.be/yqW_9d5NMjA** — recorded from the running app on the mock portal ([`demo/`](demo/)) with
 synthetic data; model answers are replayed from the response cache, so waiting time is cut (real answers take
 5–16 s). The video is built from code in [`video/`](video/) (Playwright recording + Remotion).
 
