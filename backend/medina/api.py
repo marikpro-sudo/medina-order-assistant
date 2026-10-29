@@ -112,6 +112,17 @@ def _rate_limited(ip: str) -> bool:
         return False
 
 
+@app.on_event("startup")
+def _log_available_models() -> None:
+    """Deployment diagnostics: which models this API key can reach from here (the key itself is never logged)."""
+    try:
+        ids = sorted(m.id for m in _llm.client.models.list())
+        log.warning("model API reachable; configured model %s %s; available: %s", _llm.model,
+                    "FOUND" if _llm.model in ids else "MISSING", ", ".join(ids))
+    except Exception as e:  # diagnostics only: never block startup
+        log.warning("model list unavailable: %s: %s", type(e).__name__, str(e)[:300])
+
+
 @app.get("/api/health")
 def health():
     """Cheap liveness check for the host and the keep-alive job: no model call."""
