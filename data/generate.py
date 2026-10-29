@@ -319,15 +319,16 @@ _STREETS = (
 
 def _build_customers(rng: random.Random) -> list[Customer]:
     pool = list(_PHARMACY_ROOTS) + [f"{root} Плюс" for root in _PHARMACY_ROOTS]
+    # Kept only to preserve the random sequence (determinism of everything else).
     rng.shuffle(pool)
     debtors = set(rng.sample(range(50), 5))
     customers = []
     for i in range(50):
         customer_id = f"C{100001 + i}"
         if i < 45:
-            name = f"Аптека «{pool[i]}»"
+            name = f"Клиент {i + 1}"
         else:
-            name = f"ТОО «Медцентр {pool[i]}»"
+            name = f"Клиент {i + 1} (ЛПУ)"
         city = rng.choice(_CITIES)
         points = []
         for k in range(1, rng.randint(1, 3) + 1):

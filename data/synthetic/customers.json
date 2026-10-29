@@ -1,7 +1,7 @@
 [
  {
   "customer_id": "C100001",
-  "name": "Аптека «Шипа»",
+  "name": "Клиент 1",
   "delivery_points": [
    {
     "point_id": "C100001-01",
@@ -20,7 +20,7 @@
  },
  {
   "customer_id": "C100002",
-  "name": "Аптека «Саулық Плюс»",
+  "name": "Клиент 2",
   "delivery_points": [
    {
     "point_id": "C100002-01",
@@ -44,7 +44,7 @@
  },
  {
   "customer_id": "C100003",
-  "name": "Аптека «Дәрігер Плюс»",
+  "name": "Клиент 3",
   "delivery_points": [
    {
     "point_id": "C100003-01",
@@ -63,7 +63,7 @@
  },
  {
   "customer_id": "C100004",
-  "name": "Аптека «Салауат Плюс»",
+  "name": "Клиент 4",
   "delivery_points": [
    {
     "point_id": "C100004-01",
@@ -82,7 +82,7 @@
  },
  {
   "customer_id": "C100005",
-  "name": "Аптека «Шипагер»",
+  "name": "Клиент 5",
   "delivery_points": [
    {
     "point_id": "C100005-01",
@@ -101,7 +101,7 @@
  },
  {
   "customer_id": "C100006",
-  "name": "Аптека «Василёк»",
+  "name": "Клиент 6",
   "delivery_points": [
    {
     "point_id": "C100006-01",
@@ -115,7 +115,7 @@
  },
  {
   "customer_id": "C100007",
-  "name": "Аптека «Ромашка»",
+  "name": "Клиент 7",
   "delivery_points": [
    {
     "point_id": "C100007-01",
@@ -134,7 +134,7 @@
  },
  {
   "customer_id": "C100008",
-  "name": "Аптека «Солодка»",
+  "name": "Клиент 8",
   "delivery_points": [
    {
     "point_id": "C100008-01",
@@ -153,7 +153,7 @@
  },
  {
   "customer_id": "C100009",
-  "name": "Аптека «Зверобой Плюс»",
+  "name": "Клиент 9",
   "delivery_points": [
    {
     "point_id": "C100009-01",
@@ -177,7 +177,7 @@
  },
  {
   "customer_id": "C100010",
-  "name": "Аптека «Алтей»",
+  "name": "Клиент 10",
   "delivery_points": [
    {
     "point_id": "C100010-01",
@@ -201,7 +201,7 @@
  },
  {
   "customer_id": "C100011",
-  "name": "Аптека «Ромашка Плюс»",
+  "name": "Клиент 11",
   "delivery_points": [
    {
     "point_id": "C100011-01",
@@ -215,7 +215,7 @@
  },
  {
   "customer_id": "C100012",
-  "name": "Аптека «Алтей Плюс»",
+  "name": "Клиент 12",
   "delivery_points": [
    {
     "point_id": "C100012-01",
@@ -229,7 +229,7 @@
  },
  {
   "customer_id": "C100013",
-  "name": "Аптека «Эвкалипт Плюс»",
+  "name": "Клиент 13",
   "delivery_points": [
    {
     "point_id": "C100013-01",
@@ -253,7 +253,7 @@
  },
  {
   "customer_id": "C100014",
-  "name": "Аптека «Василёк Плюс»",
+  "name": "Клиент 14",
   "delivery_points": [
    {
     "point_id": "C100014-01",
@@ -277,7 +277,7 @@
  },
  {
   "customer_id": "C100015",
-  "name": "Аптека «Шипагер Плюс»",
+  "name": "Клиент 15",
   "delivery_points": [
    {
     "point_id": "C100015-01",
@@ -291,7 +291,7 @@
  },
  {
   "customer_id": "C100016",
-  "name": "Аптека «Солодка Плюс»",
+  "name": "Клиент 16",
   "delivery_points": [
    {
     "point_id": "C100016-01",
@@ -305,7 +305,7 @@
  },
  {
   "customer_id": "C100017",
-  "name": "Аптека «Нұр»",
+  "name": "Клиент 17",
   "delivery_points": [
    {
     "point_id": "C100017-01",
@@ -329,7 +329,7 @@
  },
  {
   "customer_id": "C100018",
-  "name": "Аптека «Дәру Плюс»",
+  "name": "Клиент 18",
   "delivery_points": [
    {
     "point_id": "C100018-01",
@@ -353,7 +353,7 @@
  },
  {
   "customer_id": "C100019",
-  "name": "Аптека «Душица»",
+  "name": "Клиент 19",
   "delivery_points": [
    {
     "point_id": "C100019-01",
@@ -372,7 +372,7 @@
  },
  {
   "customer_id": "C100020",
-  "name": "Аптека «Жанұя Плюс»",
+  "name": "Клиент 20",
   "delivery_points": [
    {
     "point_id": "C100020-01",
@@ -386,7 +386,7 @@
  },
  {
   "customer_id": "C100021",
-  "name": "Аптека «Өмір Плюс»",
+  "name": "Клиент 21",
   "delivery_points": [
    {
     "point_id": "C100021-01",
@@ -400,7 +400,7 @@
  },
  {
   "customer_id": "C100022",
-  "name": "Аптека «Қамқор Плюс»",
+  "name": "Клиент 22",
   "delivery_points": [
    {
     "point_id": "C100022-01",
@@ -414,7 +414,7 @@
  },
  {
   "customer_id": "C100023",
-  "name": "Аптека «Подорожник Плюс»",
+  "name": "Клиент 23",
   "delivery_points": [
    {
     "point_id": "C100023-01",
@@ -433,7 +433,7 @@
  },
  {
   "customer_id": "C100024",
-  "name": "Аптека «Денсаулық Плюс»",
+  "name": "Клиент 24",
   "delivery_points": [
    {
     "point_id": "C100024-01",
@@ -447,7 +447,7 @@
  },
  {
   "customer_id": "C100025",
-  "name": "Аптека «Календула Плюс»",
+  "name": "Клиент 25",
   "delivery_points": [
    {
     "point_id": "C100025-01",
@@ -471,7 +471,7 @@
  },
  {
   "customer_id": "C100026",
-  "name": "Аптека «Сенім»",
+  "name": "Клиент 26",
   "delivery_points": [
    {
     "point_id": "C100026-01",
@@ -485,7 +485,7 @@
  },
  {
   "customer_id": "C100027",
-  "name": "Аптека «Дәру»",
+  "name": "Клиент 27",
   "delivery_points": [
    {
     "point_id": "C100027-01",
@@ -504,7 +504,7 @@
  },
  {
   "customer_id": "C100028",
-  "name": "Аптека «Эвкалипт»",
+  "name": "Клиент 28",
   "delivery_points": [
    {
     "point_id": "C100028-01",
@@ -528,7 +528,7 @@
  },
  {
   "customer_id": "C100029",
-  "name": "Аптека «Календула»",
+  "name": "Клиент 29",
   "delivery_points": [
    {
     "point_id": "C100029-01",
@@ -542,7 +542,7 @@
  },
  {
   "customer_id": "C100030",
-  "name": "Аптека «Арай Плюс»",
+  "name": "Клиент 30",
   "delivery_points": [
    {
     "point_id": "C100030-01",
@@ -566,7 +566,7 @@
  },
  {
   "customer_id": "C100031",
-  "name": "Аптека «Үміт»",
+  "name": "Клиент 31",
   "delivery_points": [
    {
     "point_id": "C100031-01",
@@ -590,7 +590,7 @@
  },
  {
   "customer_id": "C100032",
-  "name": "Аптека «Шипа Плюс»",
+  "name": "Клиент 32",
   "delivery_points": [
    {
     "point_id": "C100032-01",
@@ -614,7 +614,7 @@
  },
  {
   "customer_id": "C100033",
-  "name": "Аптека «Незабудка»",
+  "name": "Клиент 33",
   "delivery_points": [
    {
     "point_id": "C100033-01",
@@ -638,7 +638,7 @@
  },
  {
   "customer_id": "C100034",
-  "name": "Аптека «Қамқор»",
+  "name": "Клиент 34",
   "delivery_points": [
    {
     "point_id": "C100034-01",
@@ -652,7 +652,7 @@
  },
  {
   "customer_id": "C100035",
-  "name": "Аптека «Береке Плюс»",
+  "name": "Клиент 35",
   "delivery_points": [
    {
     "point_id": "C100035-01",
@@ -671,7 +671,7 @@
  },
  {
   "customer_id": "C100036",
-  "name": "Аптека «Мейірім»",
+  "name": "Клиент 36",
   "delivery_points": [
    {
     "point_id": "C100036-01",
@@ -685,7 +685,7 @@
  },
  {
   "customer_id": "C100037",
-  "name": "Аптека «Үміт Плюс»",
+  "name": "Клиент 37",
   "delivery_points": [
    {
     "point_id": "C100037-01",
@@ -704,7 +704,7 @@
  },
  {
   "customer_id": "C100038",
-  "name": "Аптека «Салауат»",
+  "name": "Клиент 38",
   "delivery_points": [
    {
     "point_id": "C100038-01",
@@ -718,7 +718,7 @@
  },
  {
   "customer_id": "C100039",
-  "name": "Аптека «Душица Плюс»",
+  "name": "Клиент 39",
   "delivery_points": [
    {
     "point_id": "C100039-01",
@@ -742,7 +742,7 @@
  },
  {
   "customer_id": "C100040",
-  "name": "Аптека «Мелисса Плюс»",
+  "name": "Клиент 40",
   "delivery_points": [
    {
     "point_id": "C100040-01",
@@ -761,7 +761,7 @@
  },
  {
   "customer_id": "C100041",
-  "name": "Аптека «Незабудка Плюс»",
+  "name": "Клиент 41",
   "delivery_points": [
    {
     "point_id": "C100041-01",
@@ -775,7 +775,7 @@
  },
  {
   "customer_id": "C100042",
-  "name": "Аптека «Дәрігер»",
+  "name": "Клиент 42",
   "delivery_points": [
    {
     "point_id": "C100042-01",
@@ -794,7 +794,7 @@
  },
  {
   "customer_id": "C100043",
-  "name": "Аптека «Мейірім Плюс»",
+  "name": "Клиент 43",
   "delivery_points": [
    {
     "point_id": "C100043-01",
@@ -808,7 +808,7 @@
  },
  {
   "customer_id": "C100044",
-  "name": "Аптека «Нұр Плюс»",
+  "name": "Клиент 44",
   "delivery_points": [
    {
     "point_id": "C100044-01",
@@ -822,7 +822,7 @@
  },
  {
   "customer_id": "C100045",
-  "name": "Аптека «Подорожник»",
+  "name": "Клиент 45",
   "delivery_points": [
    {
     "point_id": "C100045-01",
@@ -841,7 +841,7 @@
  },
  {
   "customer_id": "C100046",
-  "name": "ТОО «Медцентр Шалфей Плюс»",
+  "name": "Клиент 46 (ЛПУ)",
   "delivery_points": [
    {
     "point_id": "C100046-01",
@@ -860,7 +860,7 @@
  },
  {
   "customer_id": "C100047",
-  "name": "ТОО «Медцентр Береке»",
+  "name": "Клиент 47 (ЛПУ)",
   "delivery_points": [
    {
     "point_id": "C100047-01",
@@ -879,7 +879,7 @@
  },
  {
   "customer_id": "C100048",
-  "name": "ТОО «Медцентр Сенім Плюс»",
+  "name": "Клиент 48 (ЛПУ)",
   "delivery_points": [
    {
     "point_id": "C100048-01",
@@ -893,7 +893,7 @@
  },
  {
   "customer_id": "C100049",
-  "name": "ТОО «Медцентр Арай»",
+  "name": "Клиент 49 (ЛПУ)",
   "delivery_points": [
    {
     "point_id": "C100049-01",
@@ -907,7 +907,7 @@
  },
  {
   "customer_id": "C100050",
-  "name": "ТОО «Медцентр Өмір»",
+  "name": "Клиент 50 (ЛПУ)",
   "delivery_points": [
    {
     "point_id": "C100050-01",
