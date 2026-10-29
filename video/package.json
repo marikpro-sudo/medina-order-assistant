@@ -7,7 +7,7 @@
     "record:en": "node record.mjs --lang=en",
     "studio": "remotion studio src/index.ts",
     "render": "remotion render src/index.ts MedinaDemo out/medina-demo-ru.mp4 --concurrency=2 --offthreadvideo-cache-size-in-bytes=536870912",
-    "render:en": "remotion render src/index.ts MedinaDemo out/medina-demo-en.mp4 --props={\"lang\":\"en\"} --concurrency=2 --offthreadvideo-cache-size-in-bytes=536870912"
+    "render:en": "remotion render src/index.ts MedinaDemo out/medina-demo-en.mp4 --props=props-en.json --concurrency=2 --offthreadvideo-cache-size-in-bytes=536870912"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.539",

@@ -11,16 +11,18 @@ from medina.tools.toolbox import Toolbox
 
 PROMPT_PATH = Path(__file__).parent / "prompts" / "system.md"
 MAX_STEPS = 10
+UI_LANGUAGES = {"ru": "Russian", "kk": "Kazakh", "en": "English"}
 
 
 class Agent:
-    def __init__(self, ds: DataSource, customer_id: str, llm: LLM, files_dir: Path):
+    def __init__(self, ds: DataSource, customer_id: str, llm: LLM, files_dir: Path, ui_lang: str = "ru"):
         self.tools = Toolbox(ds, customer_id, files_dir)
         self.llm = llm
         c = self.tools.customer
         system = PROMPT_PATH.read_text(encoding="utf-8").format(
             today=ds.today().isoformat(), customer_name=c.name,
-            branch=PLANTS.get(c.branch_plant, c.branch_plant))
+            branch=PLANTS.get(c.branch_plant, c.branch_plant),
+            ui_language=UI_LANGUAGES.get(ui_lang, "Russian"))
         self.messages: list[dict] = [{"role": "system", "content": system}]
         self.trace: list[dict] = []  # tool calls of the last turn, for debugging and evals
 

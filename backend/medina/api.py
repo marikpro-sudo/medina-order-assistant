@@ -17,7 +17,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from data_access.synthetic import default_source
-from medina.agent import Agent
+from medina.agent import UI_LANGUAGES, Agent
 from medina.llm import LLM, ROOT
 from medina.inputs import UnsupportedFile, build_user_content
 from medina.parsers.spreadsheet import read_rows
@@ -34,7 +34,7 @@ _sessions: "OrderedDict[str, tuple[Agent, threading.Lock]]" = OrderedDict()
 _sessions_lock = threading.Lock()
 
 
-def _get_session(session_id: str, customer_id: str) -> tuple[str, Agent, threading.Lock]:
+def _get_session(session_id: str, customer_id: str, lang: str = "ru") -> tuple[str, Agent, threading.Lock]:
     ds = default_source()
     if ds.get_customer(customer_id) is None:
         raise HTTPException(400, "unknown customer")
@@ -42,12 +42,23 @@ def _get_session(session_id: str, customer_id: str) -> tuple[str, Agent, threadi
         entry = _sessions.get(session_id)
         if entry is None or entry[0].tools.customer.customer_id != customer_id:
             session_id = uuid.uuid4().hex
-            entry = (Agent(ds, customer_id, _llm, FILES_DIR), threading.Lock())
+            entry = (Agent(ds, customer_id, _llm, FILES_DIR, ui_lang=lang), threading.Lock())
             _sessions[session_id] = entry
             while len(_sessions) > MAX_SESSIONS:
                 _sessions.popitem(last=False)
         _sessions.move_to_end(session_id)
     return session_id, *entry
+
+
+def _with_language_hint(content: str | list, lang: str) -> str | list:
+    """Tool results are in Russian, which pulls replies into Russian; state the UI language each turn."""
+    name = UI_LANGUAGES.get(lang)
+    if not name or lang == "ru":
+        return content
+    hint = f"\n\n[Interface language: {name}. Reply in {name} unless this message is written in another language.]"
+    if isinstance(content, str):
+        return content + hint
+    return [{**p, "text": p["text"] + hint} if p.get("type") == "text" else p for p in content]
 
 
 def _user_content(agent: Agent, message: str, file: UploadFile | None, data: bytes) -> str | list:
@@ -73,9 +84,9 @@ def chat(
         raise HTTPException(413, "file too large")
     if not message.strip() and file is None:
         raise HTTPException(400, "empty message")
-    session_id, agent, lock = _get_session(session_id, customer_id)
+    session_id, agent, lock = _get_session(session_id, customer_id, lang)
     with lock:  # one turn at a time per conversation
-        content = _user_content(agent, message.strip(), file, data)
+        content = _with_language_hint(_user_content(agent, message.strip(), file, data), lang)
         reply = agent.ask(content)
         files = [
             {"file_id": t["result"]["file_id"], "filename": t["result"]["filename"],
